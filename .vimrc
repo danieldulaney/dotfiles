@@ -1,14 +1,15 @@
 syntax enable
 
-set tabstop=4
-set softtabstop=4
+set tabstop=8
+set softtabstop=0
 set expandtab
+set shiftwidth=4
+set smarttab
 
 filetype indent on
 
 set number
 set wildmenu
-set showmatch
 
 inoremap jk <Esc>
 
