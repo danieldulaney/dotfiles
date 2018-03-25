@@ -1,0 +1,10 @@
+[package]
+name = "prompt"
+version = "0.1.0"
+authors = ["Daniel Dulaney <dulaney.daniel@gmail.com>"]
+
+[dependencies]
+ansi_term = "0.11"
+git2 = "0.7"
+users = "0.6"
+hostname = "0.1"
