@@ -103,6 +103,54 @@ fn git_activity(repo: &Repository) -> Option<&'static str> {
     }
 }
 
+fn git_ahead_behind(repo: &Repository) -> Option<(u32, u32)> {
+    None
+}
+
+// (staged files, unstaged changed, unstaged new)
+fn git_status(repo: &Repository) -> (u32, u32, u32) {
+
+    use git2::Status;
+
+    let mut staged_count: u32 = 0;
+    let mut changed_count: u32 = 0;
+    let mut untracked_count: u32 = 0;
+
+    let mut options = git2::StatusOptions::new();
+    options.include_untracked(true);
+    options.recurse_untracked_dirs(true);
+    options.recurse_ignored_dirs(false);
+
+    let mut staged = Status::empty();
+    staged.insert(Status::INDEX_NEW);
+    staged.insert(Status::INDEX_MODIFIED);
+    staged.insert(Status::INDEX_DELETED);
+    staged.insert(Status::INDEX_RENAMED);
+    staged.insert(Status::INDEX_TYPECHANGE);
+
+    let mut changed = Status::empty();
+    changed.insert(Status::WT_MODIFIED);
+    changed.insert(Status::WT_DELETED);
+    changed.insert(Status::WT_RENAMED);
+    changed.insert(Status::WT_TYPECHANGE);
+
+    let untracked = Status::WT_NEW;
+
+    for entry in repo.statuses(Some(&mut options)).unwrap().iter() {
+        let status = entry.status();
+
+        if staged.contains(status) {
+            staged_count += 1;
+        } else if changed.contains(status) {
+            changed_count += 1;
+        } else if untracked.contains(status) {
+            untracked_count += 1;
+        }
+    }
+
+    return (staged_count, changed_count, untracked_count);
+}
+
 fn format_oid(oid: git2::Oid) -> String {
     let oid = oid.as_bytes();
 
@@ -145,14 +193,25 @@ fn main() {
         print!(" (");
 
         if let Some(activity) = git_activity(&repo) {
-            print!("{} ", Red.paint(activity));
+            print!("{}", Red.paint(activity));
         }
 
         if let Some((named, preposition, head)) = git_head(&repo) {
-            print!("{} {}", preposition, match named {
-                true => Green,
-                false => Blue,
-            }.paint(head));
+            print!("{} {}", Blue.paint(preposition), Blue.paint(head));
+        }
+
+        let (staged, changed, untracked) = git_status(&repo);
+
+        if staged > 0 {
+            print!(", {}", Green.paint(format!("{} staged", staged)));
+        }
+
+        if changed > 0 {
+            print!(", {}", Yellow.paint(format!("{} changed", changed)));
+        }
+
+        if untracked > 0 {
+            print!(", {}", Red.paint(format!("{} untracked", untracked)));
         }
 
         print!(")");
