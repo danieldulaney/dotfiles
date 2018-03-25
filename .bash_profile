@@ -25,7 +25,7 @@ in_git_repo() {
     git rev-parse --git-dir > /dev/null 2>&1
 }
 ps1_branch() {
-    branch_name="$(git symbolic-ref HEAD 2> \dev\null)"
+    branch_name=$(git symbolic-ref HEAD 2> /dev/null)
     if [ $? == 0 ]; then
         branch_name="on $(basename $branch_name)"
     else
