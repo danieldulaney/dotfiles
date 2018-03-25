@@ -1,9 +1,10 @@
 #! /usr/bin/env bash
 
+# Useful aliases
 alias ll='ls -lh --color'
+alias la='ls -lhA --color'
 
 export PATH="$HOME/.cargo/bin:$PATH"
-export GOPATH="$HOME/go"
 
 # Set up prompt
 ps1_username_color() {
