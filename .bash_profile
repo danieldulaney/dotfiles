@@ -2,6 +2,7 @@
 
 # Useful aliases
 alias ll='ls -lh --color'
+alias l='ls -lh --color'
 alias la='ls -lhA --color'
 
 export PATH="$HOME/.cargo/bin:$PATH"
