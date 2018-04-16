@@ -9,7 +9,10 @@ set smarttab
 filetype indent on
 
 set number
+set nowrap
 set wildmenu
 
 inoremap jk <Esc>
+
+execute pathogen#infect()
 
