@@ -3,3 +3,4 @@
 	name = Daniel Dulaney
 [alias]
 	tree = log --decorate --oneline --graph
+	pull = pull --ff-only
