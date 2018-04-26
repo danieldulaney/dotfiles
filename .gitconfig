@@ -4,3 +4,5 @@
 [alias]
 	tree = log --decorate --oneline --graph
 	pull = pull --ff-only
+[push]
+	default = simple
