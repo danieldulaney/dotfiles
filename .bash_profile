@@ -1,9 +1,12 @@
 #! /usr/bin/env bash
 
-# Useful aliases
+# Useful ls aliases
 alias ll='ls -lh --color'
 alias l='ls -lh --color'
 alias la='ls -lhA --color'
+
+# Make sure that vim works
+alias vim='vi'
 
 export PATH="$HOME/.cargo/bin:$PATH"
 
