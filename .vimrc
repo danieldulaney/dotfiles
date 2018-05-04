@@ -14,7 +14,5 @@ set wildmenu
 
 inoremap jk <Esc>
 
-if exists("pathogen#infect")
-    execute pathogen#infect()
-endif
+silent! call pathogen#infect()
 
