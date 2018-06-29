@@ -14,6 +14,11 @@ else
   echo "EFI system ($EFI_DIR exists!)"
 fi
 
+## Set up the system clock
+##########################
+
+timedatectl set-ntp true
+
 ## Set up GPT
 #############
 
@@ -35,6 +40,7 @@ echo "Finished writing new GPT."
 echo "Formatting partitions..."
 
 # FAT for the EFI partition; ext4 for the main partition
+# Pipe in yes to skip prompts
 yes | mkfs.fat $EFI_PART
 yes | mkfs.ext4 $ROOT_PART
 
@@ -49,3 +55,26 @@ mount $EFI_PART /mnt/boot
 ######################
 
 pacstrap /mnt base
+
+## Generate fstab
+#################
+
+genfstab -U /mnt >> /mnt/etc/fstab
+
+## Jump into the new system
+###########################
+
+arch-chroot /mnt
+
+## Set up the locale
+####################
+
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+locale-gen
+
+## Install GRUB
+###############
+
+# This install is probably wrong right now...
+pacman -S grub efibootmgr --noconfirm
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
