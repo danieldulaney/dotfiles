@@ -1,9 +1,11 @@
 #!/bin/sh
 
 EFI_DIR=/sys/firmware/efi/efivars
+EFI_PART_NUM=2
+ROOT_PART_NUM=1
 DISK=/dev/sda
-DISK1="$DISK"1
-DISK2="$DISK"2
+EFI_PART="$DISK""$EFI_PART_NUM"
+ROOT_PART="$DISK""$ROOT_PART_NUM"
 
 if [ -z "$(ls -A $EFI_DIR)" ]; then
   echo "Is this on EFI? ($EFI_DIR doesn't exist)"
@@ -20,10 +22,10 @@ echo "Writing new GPT..."
 sgdisk -og $DISK
 
 # EFI partition
-sgdisk -n 1::+100MiB -c 1:"EFI System Partition" -t 1:ef00 $DISK
+sgdisk -n "$EFI_PART_NUM::+100MiB" -c "$EFI_PART_NUM:EFI System Partition" -t "$EFI_PART_NUM:ef00" $DISK
 
 # Main partition
-sgdisk -N 2 -c 2:"Root Linux Partition" -t 2:8305 $DISK
+sgdisk -N "$ROOT_PART_NUM" -c "$ROOT_PART_NUM:Root Linux Partition" -t "$ROOT_PART_NUM:8305" $DISK
 
 echo "Finished writing new GPT."
 
@@ -33,6 +35,12 @@ echo "Finished writing new GPT."
 echo "Formatting partitions..."
 
 # FAT for the EFI partition; ext4 for the main partition
-mkfs.fat $DISK1
-mkfs.ext4 $DISK2
+mkfs.fat $EFI_PART
+mkfs.ext4 $ROOT_PART
 
+## Mount disks
+##############
+
+mount $ROOT_PART /mnt
+mkdir /mnt/boot
+mount $EFI_PART /mnt/boot
