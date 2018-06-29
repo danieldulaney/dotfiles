@@ -64,17 +64,16 @@ genfstab -U /mnt >> /mnt/etc/fstab
 ## Jump into the new system
 ###########################
 
-arch-chroot /mnt
+cat << EOF | arch-chroot /mnt
 
-## Set up the locale
-####################
-
+# Set up locales
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 
-## Install GRUB
-###############
-
+# Install GRUB
 # This install is probably wrong right now...
 pacman -S grub efibootmgr --noconfirm
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
+
+# Jump out of the chroot
+EOF
