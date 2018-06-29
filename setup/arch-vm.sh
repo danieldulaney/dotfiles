@@ -44,3 +44,8 @@ yes | mkfs.ext4 $ROOT_PART
 mount $ROOT_PART /mnt
 mkdir /mnt/boot
 mount $EFI_PART /mnt/boot
+
+## Install base system
+######################
+
+pacstrap /mnt base
