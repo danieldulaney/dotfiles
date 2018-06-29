@@ -1,8 +1,8 @@
 #!/bin/sh
 
 EFI_DIR=/sys/firmware/efi/efivars
-EFI_PART_NUM=2
-ROOT_PART_NUM=1
+EFI_PART_NUM=1
+ROOT_PART_NUM=2
 DISK=/dev/sda
 EFI_PART="$DISK""$EFI_PART_NUM"
 ROOT_PART="$DISK""$ROOT_PART_NUM"
@@ -35,8 +35,8 @@ echo "Finished writing new GPT."
 echo "Formatting partitions..."
 
 # FAT for the EFI partition; ext4 for the main partition
-mkfs.fat $EFI_PART
-mkfs.ext4 $ROOT_PART
+yes | mkfs.fat $EFI_PART
+yes | mkfs.ext4 $ROOT_PART
 
 ## Mount disks
 ##############
