@@ -75,5 +75,9 @@ pacman -S grub efibootmgr --noconfirm
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
+# Install and enable dhcpcd
+pacman -S dhcpcd --noconfirm
+systemctl enable dhcpcd.service
+
 # Jump out of the chroot
 EOF
