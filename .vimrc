@@ -14,5 +14,9 @@ set wildmenu
 
 inoremap jk <Esc>
 
+" Set up the color column
+set colorcolumn=80,120
+highlight ColorColumn ctermbg=0
+
 silent! call pathogen#infect()
 
