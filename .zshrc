@@ -78,5 +78,5 @@ fi
 # Docker aliases
 alias dk=docker
 # Docker build and run current dir
-alias dkbr='docker run -it $(docker build -q .)'
+alias dkbr='docker run -it --rm $(docker build -q .)'
 
