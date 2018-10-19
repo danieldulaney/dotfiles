@@ -1,0 +1,11 @@
+#! /usr/bin/env zsh
+
+file=${1}
+to_run=${2}
+
+echo "Watching ${file}"
+
+while inotifywait -q -e close_write,moved_to,create --format %e ${file} ; do
+    eval ${to_run}
+done
+

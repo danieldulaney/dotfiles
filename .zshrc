@@ -70,6 +70,9 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+# Add the .dotfiles scripts folder to the path
+export PATH="$HOME/.dotfiles/scripts:$PATH"
+
 # If the SSH_AUTH_SOCK env variable isn't set, set it
 if [ ! -v SSH_AUTH_SOCK ]; then
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
