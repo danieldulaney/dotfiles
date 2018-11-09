@@ -80,6 +80,9 @@ fi
 
 # Docker aliases
 alias dk=docker
-# Docker build and run current dir
-alias dkbr='docker run -it --rm $(docker build -q .)'
+# Docker build and run current or previous dir
+dkbr() {
+    container=$(docker build -q ${1:-.})
+    docker run -it --rm ${container}
+}
 
