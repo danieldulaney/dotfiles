@@ -82,7 +82,18 @@ fi
 alias dk=docker
 # Docker build and run current or previous dir
 dkbr() {
-    container=$(docker build -q ${1:-.})
-    docker run -it --rm ${container}
+    if [ "$#" -eq 0 ] ; then
+        location='.'
+        arguments=''
+    elif [ "$#" -eq 1 ] ; then
+        location=${@:1}
+        arguments=''
+    else
+        location="${@:$#}"
+        arguments="${@:1:(($# - 1))}"
+    fi
+
+    container=$(docker build -q "${location}")
+    docker run -it --rm "${arguments}" "${container}"
 }
 
