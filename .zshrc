@@ -96,4 +96,8 @@ dkbr() {
     container=$(docker build -q "${location}")
     docker run -it --rm "${arguments}" "${container}"
 }
+# Docker list all containers
+dkpsa() {
+    docker ps --all
+}
 
