@@ -1,10 +1,14 @@
 #! /usr/bin/env zsh
 
+PORT=${1:-80}
+DIR=${2:-$(pwd)}
+
+echo "Serving dir ${DIR} from port ${PORT}"
+
 # Run a server under Docker
 docker run --rm \
-    --name 'or-research-server' \
-    -v ${1:-$(pwd)}:/usr/local/apache2/htdocs \
-    --network=host \
-    httpd:2.4-alpine \
-    httpd-foreground
+    --name 'dksrv.sh-server' \
+    -v $DIR:/usr/local/apache2/htdocs \
+    -p $PORT:80 \
+    httpd
 
