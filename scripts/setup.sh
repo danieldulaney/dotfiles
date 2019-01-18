@@ -1,5 +1,10 @@
 #! /usr/bin/env sh
 
+# Make sure the repo was cloned
+if [ ! -d ~/.dotfiles ] ; then
+    git clone --recursive https://github.com/danieldulaney/dotfiles.git ~/.dotfiles
+fi
+
 # Make sure the repo was cloned recursively
 (cd ~/.dotfiles && git submodule update --init --recursive)
 
