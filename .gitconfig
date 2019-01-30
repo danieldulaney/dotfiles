@@ -1,5 +1,5 @@
 [user]
-	email = dulaney.daniel@gmail.com
+	email = dan@dulaney.xyz
 	name = Daniel Dulaney
 [alias]
 	tree = log --decorate --oneline --graph
