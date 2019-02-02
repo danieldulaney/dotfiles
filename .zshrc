@@ -78,6 +78,12 @@ if [ ! -v SSH_AUTH_SOCK ]; then
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
 fi
 
+# Connect to or start tmux on SSH
+if [[ -z "$TMUX" ]] && [[ "$SSH_CONNECTION" ]]; then
+    tmux kill-session -t ssh_tmux
+    tmux new-session -s ssh_tmux
+fi
+
 # Docker aliases
 alias dk=docker
 # Docker build and run current or previous dir
