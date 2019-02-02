@@ -1,0 +1,15 @@
+#! /bin/sh
+
+docker build -t current-dev \
+    --build-arg USERNAME=$(id -un) \
+    --build-arg GROUPNAME=$(id -gn) \
+    --build-arg UID=$(id -u) \
+    --build-arg GID=$(id -g) \
+    ~/.dotfiles/dev-env
+
+docker run -it --rm \
+    --hostname devdocker \
+    --user "$(whoami):$(whoami)" \
+    --mount "type=bind,source=$(pwd),target=/home/$(id -un)/working" \
+    current-dev
+
