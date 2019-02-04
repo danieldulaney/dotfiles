@@ -78,6 +78,11 @@ if [ ! -v SSH_AUTH_SOCK ]; then
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
 fi
 
+# If ~/.cargo exists add $HOME/.cargo/bin to the PATH
+if [[ -d $HOME/.cargo ]]; then
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 # Connect to or start tmux on SSH
 if [[ -z "$TMUX" ]] && [[ "$SSH_CONNECTION" ]]; then
     tmux kill-session -t ssh_tmux
