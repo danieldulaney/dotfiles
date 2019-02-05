@@ -1,0 +1,14 @@
+FROM dev-env-baseline
+
+ARG USERNAME
+
+WORKDIR "/home/$USERNAME"
+
+RUN su $USERNAME -c "curl https://sh.rustup.rs -so rustup.sh"
+RUN chmod +x rustup.sh
+RUN su $USERNAME -c "./rustup.sh -y"
+RUN rm rustup.sh
+
+RUN apt-get install -y build-essential
+
+CMD ["/usr/bin/zsh"]

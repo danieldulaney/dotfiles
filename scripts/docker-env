@@ -1,15 +1,32 @@
-#! /bin/sh
+#! /usr/bin/env bash
 
-docker build -t current-dev \
+set -e
+
+target="${1:-baseline}"
+echo $target
+
+docker build -t dev-env-baseline \
     --build-arg USERNAME=$(id -un) \
     --build-arg GROUPNAME=$(id -gn) \
     --build-arg UID=$(id -u) \
     --build-arg GID=$(id -g) \
     ~/.dotfiles/dev-env
 
+if [[ $target != baseline ]]; then
+
+    docker build -t "dev-env-$target" \
+        -f ~/.dotfiles/dev-env/Dockerfile-$target \
+        --build-arg USERNAME=$(id -un) \
+        --build-arg GROUPNAME=$(id -gn) \
+        --build-arg UID=$(id -u) \
+        --build-arg GID=$(id -g) \
+        ~/.dotfiles/dev-env
+
+fi
+
 docker run -it --rm \
     --hostname devdocker \
     --user "$(whoami):$(whoami)" \
     --mount "type=bind,source=$(pwd),target=/home/$(id -un)/working" \
-    current-dev
+    "dev-env-$target"
 

@@ -1,0 +1,3 @@
+FROM dev-env-baseline
+
+CMD ["/usr/bin/zsh"]
