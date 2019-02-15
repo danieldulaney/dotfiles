@@ -1,0 +1,5 @@
+FROM dev-env-baseline
+
+RUN apt-get install -y golang
+
+CMD ["/usr/bin/zsh"]

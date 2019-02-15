@@ -3,6 +3,7 @@
 set -e
 
 target="${1:-baseline}"
+run_args="${@:2}"
 echo $target
 
 docker build -t dev-env-baseline \
@@ -28,5 +29,6 @@ docker run -it --rm \
     --hostname devdocker \
     --user "$(whoami):$(whoami)" \
     --mount "type=bind,source=$(pwd),target=/home/$(id -un)/working" \
+    $run_args \
     "dev-env-$target"
 
