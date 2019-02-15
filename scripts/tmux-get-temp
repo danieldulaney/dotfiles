@@ -1,0 +1,6 @@
+#! /usr/bin/env sh
+
+temp_cels=$(echo "$(cat /sys/class/thermal/thermal_zone*/temp | sort -nr | head -n1) / 1000" | bc)
+temp_fahr=$(echo "$temp_cels * 9/5 + 32" | bc)
+
+printf '%s\u00B0C (%s\u00B0F)\n' "$temp_cels" "$temp_fahr"
