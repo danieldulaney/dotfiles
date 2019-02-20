@@ -83,10 +83,19 @@ if [[ -d $HOME/.cargo ]]; then
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
+function ssh_session_id {
+    if [[ "$SSH_AUTH_SOCK" ]]; then
+        echo -n "ssh_"
+        echo "$SSH_AUTH_SOCK" | sha1sum | cut -c -6
+    fi
+}
+
 # Connect to or start tmux on SSH
 if [[ -z "$TMUX" ]] && [[ "$SSH_CONNECTION" ]]; then
-    tmux kill-session -t ssh_tmux
-    tmux new-session -s ssh_tmux
+    echo "SSH session ID: $(ssh_session_id)"
+
+    tmux kill-session -t "$(ssh_session_id)"
+    tmux new-session -s "$(ssh_session_id)"
 fi
 
 # Docker aliases
