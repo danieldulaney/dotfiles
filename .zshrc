@@ -70,6 +70,9 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+# Vim should be the VISUAL editor
+export VISUAL=vim
+
 # Add the .dotfiles scripts folder to the path
 export PATH="$HOME/.dotfiles/scripts:$PATH"
 
