@@ -110,3 +110,11 @@ dkpsa() {
     docker ps --all
 }
 
+alias dclogs='docker-compose logs -f'
+alias dcr='docker-compose restart'
+alias dcup='docker-compose up -d'
+alias dcdn='docker-compose down'
+alias dcmon='docker-compose up -d && docker-compose logs -f'
+function dcsh() {
+    docker-compose exec "${1}" "${2:-bash}" "${@:3}"
+}
