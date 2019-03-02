@@ -1,0 +1,4 @@
+#include ".Xresources.d/solarized"
+
+xterm*font:     *-fixed-*-*-*-18-*
+

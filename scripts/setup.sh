@@ -9,8 +9,11 @@ fi
 (cd ~/.dotfiles && git submodule update --init --recursive)
 
 # Symlink to dotfiles
-ln -s ~/.dotfiles/.zshrc ~
-ln -s ~/.dotfiles/.tmux.conf ~
-ln -s ~/.dotfiles/.vimrc ~
-ln -s ~/.dotfiles/.gitconfig ~
+ln -fs ~/.dotfiles/.zshrc ~
+ln -fs ~/.dotfiles/.tmux.conf ~
+ln -fs ~/.dotfiles/.vimrc ~
+ln -fs ~/.dotfiles/.gitconfig ~
+ln -fs ~/.dotfiles/.xmonad ~
+ln -fs ~/.dotfiles/.Xresources ~
+ln -fs ~/.dotfiles/.Xresources.d ~
 
