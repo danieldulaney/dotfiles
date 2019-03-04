@@ -1,4 +1,3 @@
 #include ".Xresources.d/solarized"
 
-xterm*font:     *-fixed-*-*-*-18-*
-
+xterm*faceName: xft:Fira Code:size=12
