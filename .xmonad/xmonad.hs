@@ -76,7 +76,7 @@ viewBrowser = do
     ; runOrRaise browserCommand (className =? browserClass)
     }
 
-myWorkspaces = map show [1..9] ++ ["web"]
+myWorkspaces = ["web"] ++ map show [1..9]
 
 myManageHook = composeAll
     [ className =? browserClass -->
