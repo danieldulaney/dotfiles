@@ -8,10 +8,7 @@ import XMonad.Actions.WindowGo
 import XMonad.Layout.Spacing
 import XMonad.Layout.WindowNavigation
 import qualified XMonad.StackSet as W
-import Graphics.X11.Xlib.Extras
 import qualified Data.Map as M
-import Data.Monoid
-import Data.Word
 import System.Exit
 
 main = do 
@@ -36,6 +33,7 @@ windowMovementKeys mod keys action dirs =
 myKeys conf = M.fromList $
     [ ((mod4Mask   , xK_l), spawn "physlock")
     , ((mod4Mask   , xK_r), spawn "dmenu_run")
+    , ((mod1Mask   , xK_Tab), windows W.focusDown)
     , ((controlMask, xK_a), submap . M.fromList $
             [ ((controlMask, xK_a     ), sendKey controlMask xK_a)
             , ((0,           xK_q     ), spawn "xmonad --restart")
@@ -45,6 +43,9 @@ myKeys conf = M.fromList $
             , ((0,           xK_space ), sendMessage NextLayout)
             , ((0,           xK_Return), windows W.swapMaster)
             , ((0,           xK_w     ), viewBrowser)
+            , ((0,           xK_s     ), viewScreen 0)
+            , ((0,           xK_d     ), viewScreen 1)
+            , ((0,           xK_f     ), viewScreen 2)
             ]
 
             -- hjkl to move between windows
@@ -60,14 +61,18 @@ myKeys conf = M.fromList $
     ]
     ++ windowMovementKeys mod4Mask [xK_Right, xK_Left, xK_Up, xK_Down] Swap [R, L, U, D]
 
+viewScreen :: ScreenId -> X ()
+viewScreen sc = screenWorkspace sc >>= flip whenJust (windows . W.view)
+
+browserWorkspace = "web"
 browserScreen = 0
 browserCommand = "firefox-developer-edition"
 browserClass = "Firefox Developer Edition"
 
--- Show the "web" workspace and show or launch a browser
+-- Show the given workspace and show or launch a browser
 viewBrowser :: X ()
 viewBrowser = do
-    { windows (greedyViewOnScreen browserScreen "web")
+    { windows (greedyViewOnScreen browserScreen browserWorkspace)
     ; runOrRaise browserCommand (className =? browserClass)
     }
 
@@ -75,7 +80,7 @@ myWorkspaces = map show [1..9] ++ ["web"]
 
 myManageHook = composeAll
     [ className =? browserClass -->
-        (doShift "web") <+> (doF $ W.greedyView "web")
+        (doShift "web") <+> (doF $ W.greedyView browserWorkspace)
     ]
 
 solarized_base02 = "#073642"
