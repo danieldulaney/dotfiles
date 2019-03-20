@@ -72,6 +72,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Vim should be the VISUAL editor
 export VISUAL=vim
+export EDITOR=vim
 
 # Add the .dotfiles scripts folder to the path
 export PATH="$HOME/.dotfiles/scripts:$PATH"
@@ -118,3 +119,6 @@ alias dcmon='docker-compose up -d && docker-compose logs -f'
 function dcsh() {
     docker-compose exec "${1}" "${2:-bash}" "${@:3}"
 }
+
+# xclip should actually copy things
+alias clip='xclip -selection clipboard'
