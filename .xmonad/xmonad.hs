@@ -39,13 +39,14 @@ myKeys conf = M.fromList $
             , ((0,           xK_q     ), spawn "xmonad --restart")
             , ((shiftMask,   xK_q     ), io (exitWith ExitSuccess))
             , ((0,           xK_r     ), spawn "dmenu_run")
-            , ((shiftMask,   xK_Return), spawn "xterm")
+            , ((shiftMask,   xK_Return), spawn $ XMonad.terminal conf)
             , ((0,           xK_space ), sendMessage NextLayout)
             , ((0,           xK_Return), windows W.swapMaster)
             , ((0,           xK_w     ), viewBrowser)
             , ((0,           xK_s     ), viewScreen 0)
             , ((0,           xK_d     ), viewScreen 1)
             , ((0,           xK_f     ), viewScreen 2)
+            , ((0,           xK_c     ), kill)
             ]
 
             -- hjkl to move between windows
@@ -56,6 +57,10 @@ myKeys conf = M.fromList $
 
             -- 0-9 to select current workspace
             ++ [((0, key), windows (W.greedyView wkspace))
+                    | (key, wkspace) <- zip [xK_1..xK_9] (map show [1..9])]
+
+            -- Shift + 0-9 to send to workspace
+            ++ [((shiftMask, key), spawn "xmessage hi")
                     | (key, wkspace) <- zip [xK_1..xK_9] (map show [1..9])]
       )
     ]
@@ -88,7 +93,7 @@ solarized_blue = "#268bd2"
 
 myConfig = def
         { borderWidth = 1
-        , terminal = "xterm"
+        , terminal = "urxvt"
         , workspaces = myWorkspaces
         , normalBorderColor = solarized_base02
         , focusedBorderColor = solarized_blue

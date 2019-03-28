@@ -1,3 +1,4 @@
 #include ".Xresources.d/solarized"
 
-xterm*faceName: xft:Fira Code:size=12
+URxvt.font: xft:Fira Code:size=12
+URxvt.scrollBar: false
