@@ -122,3 +122,6 @@ function dcsh() {
 
 # xclip should actually copy things
 alias clip='xclip -selection clipboard'
+
+# vi should open vim
+alias vi='vim'
