@@ -2,3 +2,4 @@
 
 URxvt.font: xft:Fira Code:size=12
 URxvt.scrollBar: false
+URxvt.letterSpace: -1
