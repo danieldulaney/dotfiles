@@ -1,25 +1,41 @@
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.FadeInactive
+import XMonad.Hooks.ManageDocks
 import XMonad.Util.Paste
 import XMonad.Actions.Submap
 import XMonad.Actions.OnScreen
 import XMonad.Actions.WindowGo
 import XMonad.Layout.Spacing
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.NoBorders
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import System.Exit
+import Solarized
 
 main = do 
-    xmonad =<< xmobar myConfig
+    xmonad =<< statusBar "xmobar -x 1" myPP (\_ -> (0, 0)) myConfig
 
 myLayout = windowNavigation tiled ||| Full
     where
-        tiled = smartSpacing 5 $ Tall nmaster delta ratio
+        tiled = spacingRaw True (Border 5 5 5 5) False (Border 5 5 5 5) True $ Tall nmaster delta ratio
         nmaster = 1
         ratio = 1/2
         delta = 3/100
+
+dzenPos :: String -> String
+dzenPos param =
+    "^p(" ++ param ++ ")"
+
+myPP :: PP
+myPP = def
+    { ppCurrent = xmobarColor solarizedBase03 solarizedBase1 . pad
+    , ppVisible = wrap "[" "]"
+    , ppHiddenNoWindows = const ""
+    , ppUrgent = xmobarColor solarizedRed solarizedYellow . pad
+    , ppLayout = xmobarColor solarizedBase03 solarizedBlue . pad
+    }
 
 myLogHook = fadeInactiveLogHook fadeAmount
     where fadeAmount = 0.8
@@ -36,7 +52,7 @@ myKeys conf = M.fromList $
     , ((mod1Mask   , xK_Tab), windows W.focusDown)
     , ((controlMask, xK_a), submap . M.fromList $
             [ ((controlMask, xK_a     ), sendKey controlMask xK_a)
-            , ((0,           xK_q     ), spawn "xmonad --restart")
+            , ((0,           xK_q     ), spawn "xmonad --recompile && xmonad --restart")
             , ((shiftMask,   xK_q     ), io (exitWith ExitSuccess))
             , ((0,           xK_r     ), spawn "dmenu_run")
             , ((shiftMask,   xK_Return), spawn $ XMonad.terminal conf)
@@ -97,7 +113,7 @@ myConfig = def
         , workspaces = myWorkspaces
         , normalBorderColor = solarized_base02
         , focusedBorderColor = solarized_blue
-        , layoutHook = myLayout
+        , layoutHook = avoidStruts $ smartBorders $ myLayout
         , logHook = myLogHook
         , manageHook = myManageHook <+> manageHook def
         , startupHook = viewBrowser
