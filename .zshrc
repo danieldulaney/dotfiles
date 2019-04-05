@@ -87,6 +87,9 @@ if [[ -d $HOME/.cargo ]]; then
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
+# Add $HOME/.local/bin to the PATH
+export PATH="$HOME/.local/bin:$PATH"
+
 # Docker aliases
 alias dk=docker
 # Docker build and run current or previous dir
@@ -125,3 +128,5 @@ alias clip='xclip -selection clipboard'
 
 # vi should open vim
 alias vi='vim'
+
+neofetch --disable gpu
