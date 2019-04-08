@@ -2,6 +2,7 @@ import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Util.Paste
 import XMonad.Actions.Submap
 import XMonad.Actions.OnScreen
@@ -11,11 +12,13 @@ import XMonad.Layout.WindowNavigation
 import XMonad.Layout.NoBorders
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
+import Data.Monoid
 import System.Exit
+import System.IO
 import Solarized
 
 main = do 
-    xmonad =<< statusBar "xmobar -x 1" myPP (\_ -> (0, 0)) myConfig
+    xmonad =<< statusBar "xmobar -x 1" myPP (\_ -> (0, 0)) (ewmh myConfig)
 
 myLayout = windowNavigation tiled ||| Full
     where
@@ -117,6 +120,7 @@ myConfig = def
         , logHook = myLogHook
         , manageHook = myManageHook <+> manageHook def
         , startupHook = viewBrowser
+        , handleEventHook = handleEventHook def
         , XMonad.keys = myKeys
         , XMonad.modMask = mod4Mask
         }
