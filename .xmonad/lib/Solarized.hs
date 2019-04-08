@@ -16,3 +16,10 @@ solarizedViolet  = "#6c71c4"
 solarizedBlue    = "#268bd2"
 solarizedCyan    = "#2aa198"
 solarizedGreen   = "#859900"
+
+solarizedBackground = solarizedBase03
+solarizedForeground = solarizedBase0
+solarizedFadeColor = solarizedBase03
+solarizedCursorColor = solarizedBase1
+solarizedPointerColorBackground = solarizedBase01
+solarizedPointerColorForeground = solarizedBase1
