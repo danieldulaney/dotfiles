@@ -12,7 +12,7 @@ import XMonad.Layout.WindowNavigation
 import XMonad.Layout.NoBorders
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
-import Data.Monoid
+import Data.Char
 import System.Exit
 import System.IO
 import Solarized
@@ -27,17 +27,19 @@ myLayout = windowNavigation tiled ||| Full
         ratio = 1/2
         delta = 3/100
 
-dzenPos :: String -> String
-dzenPos param =
-    "^p(" ++ param ++ ")"
+highlight = xmobarColor solarizedBackground
 
 myPP :: PP
 myPP = def
-    { ppCurrent = xmobarColor solarizedBase03 solarizedBase1 . pad
-    , ppVisible = wrap "[" "]"
+    { ppCurrent = highlight solarizedBlue . pad
+    , ppVisible = highlight solarizedViolet . pad
+    , ppHidden = highlight solarizedBase01 . pad
     , ppHiddenNoWindows = const ""
-    , ppUrgent = xmobarColor solarizedRed solarizedYellow . pad
-    , ppLayout = xmobarColor solarizedBase03 solarizedBlue . pad
+    , ppUrgent = highlight solarizedYellow . pad
+    , ppSep = " | "
+    , ppTitle = id
+    , ppTitleSanitize = xmobarStrip
+    , ppLayout = id
     }
 
 myLogHook = fadeInactiveLogHook fadeAmount
