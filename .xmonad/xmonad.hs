@@ -53,8 +53,10 @@ windowMovementKeys mod keys action dirs =
     [(( mod , key ), sendMessage $ action dir)
         | (key, dir) <- zip keys dirs]
 
+screenLock = "i3lock -f -c " ++ show solarizedBase01
+
 myKeys conf = M.fromList $
-    [ ((mod4Mask   , xK_l), spawn "physlock")
+    [ ((mod4Mask   , xK_l), spawn screenLock)
     , ((mod4Mask   , xK_r), spawn "dmenu_run")
     , ((mod1Mask   , xK_Tab), windows W.focusDown)
     , ((controlMask, xK_a), submap . M.fromList $

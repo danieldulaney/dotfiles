@@ -33,9 +33,9 @@ resolver: lts-13.15
 #  - auto-update
 #  - wai
 packages:
-- xmobar-git
-- xmonad-git
-- xmonad-contrib-git
+    - xmobar-git
+    - xmonad-git
+    - xmonad-contrib-git
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
