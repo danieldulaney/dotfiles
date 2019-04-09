@@ -29,11 +29,13 @@ myLayout = windowNavigation tiled ||| Full
 
 highlight = xmobarColor solarizedBackground
 
+wsSwitch ws = xmobarAction ("wmctrl -s " ++ ws) "1" ws
+
 myPP :: PP
 myPP = def
     { ppCurrent = highlight solarizedBlue . pad
-    , ppVisible = highlight solarizedViolet . pad
-    , ppHidden = highlight solarizedBase01 . pad
+    , ppVisible = highlight solarizedViolet . wsSwitch . pad
+    , ppHidden = highlight solarizedBase01 . wsSwitch . pad
     , ppHiddenNoWindows = const ""
     , ppUrgent = highlight solarizedYellow . pad
     , ppSep = " ┃ "
@@ -109,15 +111,12 @@ myManageHook = composeAll
         (doShift "web") <+> (doF $ W.greedyView browserWorkspace)
     ]
 
-solarized_base02 = "#073642"
-solarized_blue = "#268bd2"
-
 myConfig = def
         { borderWidth = 1
         , terminal = "urxvt"
         , workspaces = myWorkspaces
-        , normalBorderColor = solarized_base02
-        , focusedBorderColor = solarized_blue
+        , normalBorderColor = solarizedBase02
+        , focusedBorderColor = solarizedBlue
         , layoutHook = avoidStruts $ smartBorders $ myLayout
         , logHook = myLogHook
         , manageHook = myManageHook <+> manageHook def
