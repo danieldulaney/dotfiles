@@ -1,0 +1,19 @@
+Config
+    { font = "xft:Fira Code:size=12"
+    , bgColor = "#002b36" -- solarizedBase03 aka solarizedBackground
+    , fgColor = "#839496" -- solarizedBase0 aka solarizedForeground
+    , border = BottomB
+    , borderColor = "#586e75" -- solarizedBase01
+    , commands =
+        [ Run UnsafeStdinReader
+        , Run Date "%a %d %b %Y %I:%M:%S %p" "date" 1
+        , Run Battery
+            [ "-t", "<watts>W <left>% <timeleft>"
+            , "--"
+            , "-L", "0", "-H", "0"
+            ] 60
+        ]
+    , sepChar = "%"
+    , alignSep = "}{"
+    , template = "%UnsafeStdinReader% }{ %battery% - %date%"
+    }
