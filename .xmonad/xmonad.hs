@@ -4,6 +4,7 @@ import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Util.Paste
+import XMonad.Util.WorkspaceCompare
 import XMonad.Actions.Submap
 import XMonad.Actions.OnScreen
 import XMonad.Actions.WindowGo
@@ -42,6 +43,7 @@ myPP = def
     , ppTitle = id
     , ppTitleSanitize = xmobarStrip
     , ppLayout = id
+    , ppSort = getSortByXineramaRule
     }
 
 myLogHook = fadeInactiveLogHook fadeAmount
@@ -84,8 +86,8 @@ myKeys conf = M.fromList $
             ++ [((0, key), windows (W.greedyView wkspace))
                     | (key, wkspace) <- zip [xK_1..xK_9] (map show [1..9])]
 
-            -- Shift + 0-9 to send to workspace
-            ++ [((shiftMask, key), spawn "xmessage hi")
+            -- 0-9 to send to workspace
+            ++ [((shiftMask, key), windows (W.shift wkspace))
                     | (key, wkspace) <- zip [xK_1..xK_9] (map show [1..9])]
       )
     ]
