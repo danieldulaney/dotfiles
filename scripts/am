@@ -1,0 +1,29 @@
+#! /usr/bin/env bash
+
+filename="$1"
+
+exec 3< <(inotifywait -e MOVED_TO --format %f .)
+
+dtrx -n "$filename"
+
+read <&3 destpath
+
+echo "Files available in $destpath"
+
+background_task() {
+    echo "Starting background task..."
+
+    echo "Waiting for first activity"
+
+    inotifywait -t 60 -r "$destpath"
+
+    echo "Activity detected in $destpath. Waiting for all files to close"
+
+    lsof +r 1 +D "$destpath" > /dev/null
+
+    echo "Deleting $destpath because all files are closed"
+
+    rm -rf "$destpath" > /dev/null
+}
+
+background_task "$1" 2>&1 | logger -t am &
