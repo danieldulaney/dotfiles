@@ -1,5 +1,5 @@
 #include ".Xresources.d/solarized"
 
-URxvt.font: xft:Fira Code:size=12
+URxvt.font: xft:Fira Code:size=12,xft:FreeSerif:style=Regular,xft:unifont:style=Medium:antialias=false
 URxvt.scrollBar: false
 URxvt.letterSpace: -1

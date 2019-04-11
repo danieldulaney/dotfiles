@@ -4,16 +4,20 @@ Config
     , fgColor = "#839496" -- solarizedBase0 aka solarizedForeground
     , border = BottomB
     , borderColor = "#586e75" -- solarizedBase01
+    , iconRoot = "/home/daniel/.dotfiles/icons"
     , commands =
         [ Run UnsafeStdinReader
         , Run Date "%a %d %b %Y %I:%M:%S %p" "date" 1
         , Run Battery
-            [ "-t", "<watts>W <left>% <timeleft>"
+            [ "-t", "<acstatus><watts> <leftvbar> <left>% <timeleft>"
+            , "-L", "20", "-H", "80"
             , "--"
             , "-L", "0", "-H", "0"
-            ] 60
+            , "-O", "P", "-i", "I", "-o", "U"
+            ] 10
+        , Run DynNetwork [] 10
         ]
     , sepChar = "%"
     , alignSep = "}{"
-    , template = "%UnsafeStdinReader% }{ %battery% - %date%"
+    , template = "%UnsafeStdinReader% }{ ┃ %battery% ┃ %date%"
     }
