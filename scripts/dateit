@@ -1,0 +1,6 @@
+#! /usr/bin/env sh
+
+file="$1"
+datetime=$(date +%Y-%m-%dT%H-%M-%S)
+
+mv "$file" "${file}_${datetime}"
