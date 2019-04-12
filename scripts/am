@@ -2,16 +2,16 @@
 
 filename="$1"
 
-exec 3< <(inotifywait -e MOVED_TO --format %f .)
+exec 3< <(inotifywait -e MOVED_TO -q --format %f .)
 
 dtrx -n "$filename"
 
 read <&3 destpath
 
-echo "Files available in $destpath"
+echo "$destpath"
 
 background_task() {
-    echo "Starting background task..."
+    echo "Starting background task... (pid $$)"
 
     echo "Waiting for first activity"
 
