@@ -70,6 +70,7 @@ myKeys conf = M.fromList $
             , ((0,           xK_space ), sendMessage NextLayout)
             , ((0,           xK_Return), windows W.swapMaster)
             , ((0,           xK_w     ), viewBrowser)
+            , ((0,           xK_e     ), viewEmail)
             , ((0,           xK_s     ), viewScreen 0)
             , ((0,           xK_d     ), viewScreen 1)
             , ((0,           xK_f     ), viewScreen 2)
@@ -96,24 +97,32 @@ myKeys conf = M.fromList $
 viewScreen :: ScreenId -> X ()
 viewScreen sc = screenWorkspace sc >>= flip whenJust (windows . W.view)
 
-browserWorkspace = "web"
-browserScreen = 0
-browserCommand = "firefox-developer-edition"
-browserClass = "Firefox Developer Edition"
-
--- Show the given workspace and show or launch a browser
-viewBrowser :: X ()
-viewBrowser = do
-    { windows (greedyViewOnScreen browserScreen browserWorkspace)
-    ; runOrRaise browserCommand (className =? browserClass)
+-- Show the given workspace and show or launch a program
+viewProgram :: String -> ScreenId -> String -> String -> X ()
+viewProgram workspace screen windowClass command = do
+    { windows (greedyViewOnScreen screen workspace)
+    ; runOrRaise command (className =? windowClass)
     }
 
-myWorkspaces = ["web"] ++ map show [1..9]
+snapProgram workspace screen windowClass = className =? windowClass -->
+    (doShift workspace) <+> (doF $ greedyViewOnScreen screen workspace)
+
+viewBrowser = viewProgram "web" 0 "Firefox Developer Edition" "firefox-developer-edition"
+snapBrowser = snapProgram "web" 0 "Firefox Developer Edition"
+
+viewEmail = viewProgram "email" 0 "Thunderbird" "thunderbird"
+snapEmail = viewProgram "email" 0 "Thunderbird"
+
+myWorkspaces = ["web", "email"] ++ map show [1..9]
 
 myManageHook = composeAll
-    [ className =? browserClass -->
-        (doShift "web") <+> (doF $ W.greedyView browserWorkspace)
+    [ snapBrowser
     ]
+
+--myManageHook = composeAll
+--    [ className =? "Firefox Developer Edition" -->
+--        (doShift "web") <+> (doF $ W.greedyView "web")
+--    ]
 
 myConfig = def
         { borderWidth = 1
@@ -124,7 +133,7 @@ myConfig = def
         , layoutHook = avoidStruts $ smartBorders $ myLayout
         , logHook = myLogHook
         , manageHook = myManageHook <+> manageHook def
-        , startupHook = viewBrowser
+        , startupHook = viewEmail >> viewBrowser 
         , handleEventHook = handleEventHook def
         , XMonad.keys = myKeys
         , XMonad.modMask = mod4Mask
