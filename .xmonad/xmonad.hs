@@ -8,6 +8,7 @@ import XMonad.Util.WorkspaceCompare
 import XMonad.Actions.Submap
 import XMonad.Actions.OnScreen
 import XMonad.Actions.WindowGo
+import XMonad.Actions.WithAll
 import XMonad.Layout.Spacing
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.NoBorders
@@ -75,6 +76,7 @@ myKeys conf = M.fromList $
             , ((0,           xK_d     ), viewScreen 1)
             , ((0,           xK_f     ), viewScreen 2)
             , ((0,           xK_c     ), kill)
+            , ((shiftMask,   xK_c     ), killAll)
             ]
 
             -- hjkl to move between windows
