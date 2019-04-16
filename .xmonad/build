@@ -1,6 +1,16 @@
-#! /bin/sh
+#! /bin/bash
 
-exec stack ghc -- \
+set -e
+
+stack ghc -- \
+    --make xmobar.hs \
+    -i \
+    -ilib \
+    -fforce-recomp \
+    -main-is main \
+    -o xmobar
+
+stack ghc -- \
     --make xmonad.hs \
     -i \
     -ilib \

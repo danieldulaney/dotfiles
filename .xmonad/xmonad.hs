@@ -20,7 +20,7 @@ import System.IO
 import Solarized
 
 main = do 
-    xmonad =<< statusBar "xmobar -x 1" myPP (\_ -> (0, 0)) (ewmh myConfig)
+    xmonad =<< statusBar "~/.xmonad/xmobar -x 1" myPP (\_ -> (0, 0)) (ewmh myConfig)
 
 myLayout = windowNavigation tiled ||| Full
     where
