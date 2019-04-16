@@ -1,14 +1,14 @@
 import Xmobar hiding (main)
---import XMobar.Config.Types (OnScreen)
+import Solarized
 
 config :: Config
 config = defaultConfig
     { font = "xft:Fira Code:size=12"
-    , bgColor = "#002b36" -- solarizedBase03 aka solarizedBackground
-    , fgColor = "#839496" -- solarizedBase0 aka solarizedForeground
-    , additionalFonts = [ "xft:FontAwesome:size=12" ]
+    , bgColor = solarizedBackground
+    , fgColor = solarizedForeground
+    , additionalFonts = [ "xft:Font Awesome 5 Free:style=Solid:size=12" ]
     , border = BottomB
-    , borderColor = "#586e75" -- solarizedBase01
+    , borderColor = solarizedBase01
     , position = OnScreen 1 Top
     , commands =
         [ Run $ UnsafeStdinReader
@@ -20,11 +20,12 @@ config = defaultConfig
             , "-L", "0", "-H", "0"
             , "-O", "P", "-i", "I", "-o", "U"
             ] 10
+        , Run $ Memory [] 10
         , Run $ DynNetwork [] 10
         ]
     , sepChar = "%"
     , alignSep = "}{"
-    , template = "%UnsafeStdinReader% }{ ┃ %battery% ┃ %date%"
+    , template = "%UnsafeStdinReader% }{ <fn=1>\xf538</fn> %memory% ┃ %battery% ┃ %date%"
     }
 
 main :: IO ()
