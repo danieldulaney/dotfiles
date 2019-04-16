@@ -2,6 +2,7 @@ Config
     { font = "xft:Fira Code:size=12"
     , bgColor = "#002b36" -- solarizedBase03 aka solarizedBackground
     , fgColor = "#839496" -- solarizedBase0 aka solarizedForeground
+    , additionalFonts = [ "xft:FontAwesome:size=12" ]
     , border = BottomB
     , borderColor = "#586e75" -- solarizedBase01
     , iconRoot = "/home/daniel/.dotfiles/icons"
