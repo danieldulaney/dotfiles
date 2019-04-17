@@ -1,4 +1,5 @@
-xmobar
+# Cabal files are generated automatically from package.yaml files
+*.cabal
 
 *.errors
 *-x86_64-linux
