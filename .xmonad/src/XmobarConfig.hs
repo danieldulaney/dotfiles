@@ -4,9 +4,10 @@ import Xmobar hiding (main)
 import Solarized
 
 import Data.List
-import Data.List.Split
+import Data.List.Split hiding (startsWith)
 import Data.Maybe
 
+import Text.Read
 import Text.Regex.Posix
 
 -- Utilities
@@ -17,9 +18,36 @@ pad s = " " ++ s ++ " "
 
 highlight = color (bgColor config)
 
-toHumanRegex = "[0-9]"
-toHuman s = s =~ toHumanRegex
+byteUnits = [ ('k', 2^10)
+            , ('M', 2^20)
+            , ('G', 2^30)
+            , ('T', 2^40)
+            , ('P', 2^50) ]
 
+-- Evaluates the predicate against an item. If it is true, returns the item
+-- wrapped in a Maybe. Otherwise, returns Nothing
+checkThat :: (a -> Bool) -> a -> Maybe a
+checkThat pred item
+    | (pred item) = Just item
+    | otherwise   = Nothing
+
+fromHuman :: String -> Maybe Integer
+fromHuman s = do
+    { results <- checkThat (\l -> length l == 2) $ regexResults s
+    ; base <- (readMaybe $ head results :: Maybe Integer)
+    ; multiplier <- getUnit $ last results
+    ; return $ base * multiplier
+    } where
+        regexResults :: String -> [String]
+        regexResults s = mrSubList (s =~ "([[:digit:]]+)[[:blank:]]*([[:alpha:]]*)")
+        getUnit :: String -> Maybe Integer
+        getUnit unit = return . snd =<< (listToMaybe $ filter (\(u, _) -> u == head unit) byteUnits)
+
+startsWith [] _ = True
+startsWith _ [] = False
+startsWith (n:ns) (h:hs)
+    | n == h    = startsWith ns hs
+    | otherwise = False
 
 -- Plugins
 ----------
@@ -32,20 +60,23 @@ data FancyMemory = FancyMemory
 
 instance Exec FancyMemory where
     alias (FancyMemory _) = "fancymem"
-    run   (FancyMemory _) = show <$> memItem "MemTotal"
+    run   (FancyMemory _) = show <$> memItem "MemFree"
     rate  (FancyMemory i) = i
 
-fileMem :: IO String
-fileMem = readFile "/proc/meminfo"
+memFile :: IO String
+memFile = readFile "/proc/meminfo"
 
-memItem :: String -> IO (Maybe String)
-memItem s = listToMaybe <$> (map $ intercalate " ") <$> (map tail) <$> filter (lineMatches s) <$> (map splitFields) <$> splitLines <$> fileMem
-    where
+memItem :: String -> IO (Maybe Integer)
+memItem s = do
+    { file <- memFile
+    ; let lines = splitLines file
+    ; let matchinglines = filter (startsWith $ s ++ ":") lines
+    ; let matchingvalues = map (getIndex 1 . splitOn ":") matchinglines
+    ; let matchingvalue = listToMaybe matchingvalues >>= fromHuman
+    ; return $ matchingvalue
+    } where
         splitLines = endBy "\n"
-        splitFields = split (dropBlanks $ dropDelims $ oneOf ": ")
-        lineMatches str (first:_) = str == first
-        lineMatches _ [] = False
-        listItem str = listToMaybe . filter (lineMatches str)
+        getIndex ix list = list!!ix
 
 -- Main config
 --------------
