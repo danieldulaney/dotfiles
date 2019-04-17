@@ -3,7 +3,11 @@ module XmobarConfig where
 import Xmobar hiding (main)
 import Solarized
 
+import Data.List
 import Data.List.Split
+import Data.Maybe
+
+import Text.Regex.Posix
 
 -- Utilities
 ------------
@@ -12,6 +16,9 @@ color fg bg content = "<fc=" ++ fg ++ "," ++ bg ++ ">" ++ content ++ "</fc>"
 pad s = " " ++ s ++ " "
 
 highlight = color (bgColor config)
+
+toHumanRegex = "[0-9]"
+toHuman s = s =~ toHumanRegex
 
 
 -- Plugins
@@ -25,16 +32,20 @@ data FancyMemory = FancyMemory
 
 instance Exec FancyMemory where
     alias (FancyMemory _) = "fancymem"
-    run   (FancyMemory _) = show <$> memInfo
+    run   (FancyMemory _) = show <$> memItem "MemTotal"
     rate  (FancyMemory i) = i
 
 fileMem :: IO String
 fileMem = readFile "/proc/meminfo"
 
--- Returns (total, free)
---memInfo :: IO (Int, Int)
-memInfo = (splitOn "\n") <$> fileMem
-
+memItem :: String -> IO (Maybe String)
+memItem s = listToMaybe <$> (map $ intercalate " ") <$> (map tail) <$> filter (lineMatches s) <$> (map splitFields) <$> splitLines <$> fileMem
+    where
+        splitLines = endBy "\n"
+        splitFields = split (dropBlanks $ dropDelims $ oneOf ": ")
+        lineMatches str (first:_) = str == first
+        lineMatches _ [] = False
+        listItem str = listToMaybe . filter (lineMatches str)
 
 -- Main config
 --------------

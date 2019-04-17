@@ -10,7 +10,9 @@ dependencies:
     - xmonad
     - xmonad-contrib
     - xmobar
+    - text
     - split
+    - regex-posix
 
 executables:
     xmonad:

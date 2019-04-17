@@ -2,19 +2,18 @@
 
 set -e
 
-stack ghc -- \
-    --make xmobar.hs \
-    -i \
-    -ilib \
-    -fforce-recomp \
-    -main-is main \
-    -o xmobar
+stack build --copy-bins my-config:exe:xmobar
+stack build my-config:exe:xmonad
 
-stack ghc -- \
-    --make xmonad.hs \
-    -i \
-    -ilib \
-    -fforce-recomp \
-    -main-is main \
-    -v0 \
-    -o "$1"
+xmonad_bin=$(stack exec which xmonad)
+
+echo
+
+if [ ! -z ${1+x} ]; then
+    rm -f "$1"
+    echo "Copying from ${xmonad_bin} to ${1}"
+    cp "$xmonad_bin" "$1"
+else
+    echo "Bin is in ${xmonad_bin}; no copying performed"
+fi
+
