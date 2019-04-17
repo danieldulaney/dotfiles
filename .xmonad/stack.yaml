@@ -33,21 +33,18 @@ resolver: lts-13.15
 #  - auto-update
 #  - wai
 packages:
-    - location:
-        git: https://github.com/xmonad/xmonad.git
-        commit: bb13853929f8f6fc59b526bcc10631e1bac309ad
-    - location:
-        git: https://github.com/xmonad/xmonad-contrib.git
-        commit: 4ad6ecf892470a5202bf16784eeab4e365f7a90e
-    - location:
-        git: https://github.com/jaor/xmobar.git
-        commit: 2ff796f843bbd51e7cd0aa24b7b98251d263e487
+    - solarized-xmonad
+    - .
 
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 extra-deps:
     - iwlib-0.1.0
+    - xmonad-0.15
+    - xmonad-contrib-0.15
+    - xmobar-0.29.5
+
 
 # Override default flag values for local packages and extra-deps
 flags:

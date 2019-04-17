@@ -1,0 +1,24 @@
+name: my-config
+synopsis: My personal xmonad and xmobar configurations
+
+stability: experimental
+
+dependencies:
+    - base
+    - solarized-xmonad
+    - containers
+    - xmonad
+    - xmonad-contrib
+    - xmobar
+    - split
+
+executables:
+    xmonad:
+        source-dirs: src
+        main: XmonadConfig.hs
+        ghc-options: -main-is XmonadConfig
+
+    xmobar:
+        source-dirs: src
+        main: XmobarConfig.hs
+        ghc-options: -main-is XmobarConfig
