@@ -14,6 +14,8 @@ set number
 set nowrap
 set wildmenu
 
+set hlsearch
+
 inoremap jk <Esc>
 
 nnoremap <Space> @q
