@@ -13,6 +13,8 @@ dependencies:
     - text
     - split
     - regex-posix
+    - unix
+    - filepath
 
 executables:
     xmonad:
