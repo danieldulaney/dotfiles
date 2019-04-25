@@ -20,7 +20,7 @@ instance Exec FancyMemory where
         ; let string = printf "%-3.1f%%" pct :: String
         ; let used = memInfo !! 8
         ; let total = memInfo !! 3
-        ; return $ icon '\xf538' ++ (alertHighlightPad ratio string) ++ "(" ++ (withByteUnits used) ++ "/" ++ (withByteUnits total) ++ ")"
+        ; return $ icon "\xf538" ++ (alertHighlightPad ratio string) ++ "(" ++ (withByteUnits used) ++ "/" ++ (withByteUnits total) ++ ")"
         }
     rate  (FancyMemory i) = i
 

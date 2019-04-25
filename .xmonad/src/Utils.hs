@@ -2,8 +2,12 @@ module Utils where
 
 import Solarized
 import Text.Printf
+import System.FilePath ((</>))
+import System.Directory
+import System.Posix.Files
+import Control.Exception (SomeException, handle)
 
-icon c = "<fn=1>" ++ c : "</fn>"
+icon c = "<fn=1>" ++ c ++ "</fn>"
 color fg bg content = "<fc=" ++ fg ++ "," ++ bg ++ ">" ++ content ++ "</fc>"
 pad s = " " ++ s ++ " "
 
@@ -72,3 +76,10 @@ divideIntegral lhs rhs = (fromIntegral lhs) / (fromIntegral rhs)
 maybePrintf1 :: String -> Maybe Double -> String
 maybePrintf1 _ Nothing = "Updating..."
 maybePrintf1 fmt (Just item) = printf fmt item
+
+dirContentsVisible :: FilePath -> IO [FilePath]
+dirContentsVisible dir = (map (dir </>)) . (filter (\e -> head e /= '.')) <$> getDirectoryContents dir
+
+safeFileExist :: String -> String -> IO Bool
+safeFileExist d f = handle noErrors $ fileExist (d </> f)
+    where noErrors = const (return False) :: SomeException -> IO Bool

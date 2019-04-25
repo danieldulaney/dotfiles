@@ -15,6 +15,7 @@ dependencies:
     - regex-posix
     - unix
     - filepath
+    - directory
 
 executables:
     xmonad:

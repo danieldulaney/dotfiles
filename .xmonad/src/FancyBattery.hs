@@ -1,20 +1,14 @@
-module FancyBattery
-    ( FancyBattery (..)
-    , batteryFiles
-    , Files (..)
-    , readBattery
-    , acOnline
-    , powerIcon
-    ) where
+module FancyBattery where
 
 import Xmobar hiding (main, Battery)
 
-import Control.Exception (SomeException, handle)
 import Control.Monad.ST
 import System.IO (IOMode(ReadMode), hGetLine, withFile)
-import System.FilePath ((</>))
-import System.Posix.Files
+import System.FilePath
+import System.Directory
 import Text.Printf
+import Data.List
+import Control.Exception (SomeException, handle)
 
 import Utils
 
@@ -25,9 +19,9 @@ data FancyBattery = FancyBattery
 instance Exec FancyBattery where
     alias (FancyBattery _) = "fancybat"
     run   (FancyBattery _) = do
-        { ac_status <- acOnline
-        ; bat_status <- batteryFiles "BAT0" >>= readBattery
-        ; return $ (powerIcon' ac_status bat_status) ++ (batDetails bat_status)
+        { powerSupplies <- powerSupplyPaths >>= mapM readPowerSupply
+        ; let customIcon = icon $ powerIcon powerSupplies
+        ; return customIcon
         }
     rate  (FancyBattery i) = i
 
@@ -40,50 +34,66 @@ data Files = Files
     , isCurrent :: Bool
     } | NoFiles deriving (Eq, Show)
 
-data Battery = Battery
-    { full :: !Float
-    , now :: !Float
-    , power :: !Float
-    , status :: !String
-    } | NoBatt deriving (Show)
+data PowerSupply =
+    Battery
+        { full :: !Float
+        , now :: !Float
+        , power :: !Float
+        , status :: !String
+        }
+    | Ac { online :: !Bool }
+    | Usb 
+    | Bad { info :: !String } deriving (Show, Eq)
 
-batDetails :: Battery -> String
-batDetails NoBatt = ""
-batDetails (Battery full now power _) = printf " %s %d:%02d" percentage hoursLeft minsLeft
-    where
-        ratio = now / full
-        percentage = alertHighlightLow ratio $ show (round $ ratio * 100) ++ "%"
-        secsLeft = round $ now / power
-        hoursLeft = secsLeft `div` 3600 :: Int
-        minsLeft = (secsLeft `mod` 3600) `div` 60 :: Int
+isBattery (Battery _ _ _ _) = True
+isBattery _                 = False
 
-powerIcon :: Bool -> Battery -> String
-powerIcon True _ = "\xf1e6" -- AC plug icon
-powerIcon False NoBatt = "\xf059" -- Question mark icon (no battery and no ac)
-powerIcon False (Battery full now _ _)
-    | ratio < 1/8 = "\xf244" -- Empty
-    | ratio < 3/8 = "\xf243" -- Quarter
-    | ratio < 5/8 = "\xf242" -- Half
-    | ratio < 7/8 = "\xf241" -- Three-quarter
-    | otherwise   = "\xf240" -- Full
-    where ratio = now / full
-
-powerIcon' ac = (concat . (map icon)) . (powerIcon ac)
+activeBatteries = (filter (\b -> status b == "Discharging")) . (filter isBattery)
 
 sysDir :: FilePath
 sysDir = "/sys/class/power_supply"
 
-acOnlineFile = sysDir </> "AC" </> "online"
+powerSupplyPaths :: IO [FilePath]
+powerSupplyPaths = dirContentsVisible sysDir
 
-acOnline :: IO Bool
-acOnline = readFile acOnlineFile >>= return . (\content -> head content == '1')
+readPowerSupply :: FilePath -> IO PowerSupply
+readPowerSupply path
+    | "BAT" `matches` path = batteryFiles path >>= readBattery
+    | "AC" `matches` path  = readAc path
+    | "USB" `matches` path = return Usb
+    | otherwise            = return $ Bad ""
+    where matches s = (isPrefixOf s) . takeFileName
 
-safeFileExist :: String -> String -> IO Bool
-safeFileExist d f = handle noErrors $ fileExist (d </> f)
-    where noErrors = const (return False) :: SomeException -> IO Bool
+powerIcon :: [PowerSupply] -> String
+powerIcon list | [] /= filter (== Ac True) list = "\xf1e6" -- Active AC -> Plug
+powerIcon list | [] /= activeBatteries list =
+    if ratio < 1/8 then "\xf244"
+    else if ratio < 3/8 then "\xf243"
+    else if ratio < 5/8 then "\xf242"
+    else if ratio < 7/8 then "\xf241"
+    else "\xf240"
+    where
+        active ps = status ps == "Discharging"
+        activeBats = (filter active) . (filter isBattery) $ list
+        ratio = (now (head activeBats)) / (full (head activeBats))
+powerIcon list | [] /= filter (==Usb) list = "\xf287"
+powerIcon _ = "\xf5d2" -- Unknown power supply -> Atom
+
+--batDetails :: PowerSupply -> String
+--batDetails (Battery full now power _) = printf " %s %d:%02d" percentage hoursLeft minsLeft
+--    where
+--        ratio = now / full
+--        percentage = alertHighlightLow ratio $ show (round $ ratio * 100) ++ "%"
+--        secsLeft = round $ now / power
+--        hoursLeft = secsLeft `div` 3600 :: Int
+--        minsLeft = (secsLeft `mod` 3600) `div` 60 :: Int
+--batDetails _ = ""
+
+readAc :: FilePath -> IO PowerSupply
+readAc prefix = readFile (prefix </> "online") >>= return . (\content -> Ac (head content == '1'))
 
 batteryFiles :: String -> IO Files
-batteryFiles bat = do
+batteryFiles prefix = do
     { is_charge <- exists "charge_now"
     ; is_energy <- if is_charge then return False else exists "energy_now"
     ; is_power <- exists "power_now"
@@ -95,7 +105,6 @@ batteryFiles bat = do
         (_, True) -> files "energy" cf sf is_power
         _ -> NoFiles
     } where
-        prefix = sysDir </> bat
         exists = safeFileExist prefix
         files ch cf sf ip = Files
             { fFull = prefix </> ch ++ "_full" ++ sf
@@ -106,11 +115,11 @@ batteryFiles bat = do
             , isCurrent = not ip
             }
 
-readBattery :: Files -> IO Battery
+readBattery :: Files -> IO PowerSupply
 readBattery = readBattery' 1e6
 
-readBattery' :: Float -> Files -> IO Battery
-readBattery' _ NoFiles = return $ NoBatt
+readBattery' :: Float -> Files -> IO PowerSupply
+readBattery' _ NoFiles = return $ Bad ""
 readBattery' sc files =
     do a <- grab $ fFull files
        b <- grab $ fNow files
