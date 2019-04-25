@@ -8,6 +8,7 @@ import System.FilePath
 import System.Directory
 import Text.Printf
 import Data.List
+import Data.Maybe
 import Control.Exception (SomeException, handle)
 
 import Utils
@@ -21,7 +22,9 @@ instance Exec FancyBattery where
     run   (FancyBattery _) = do
         { powerSupplies <- powerSupplyPaths >>= mapM readPowerSupply
         ; let customIcon = icon $ powerIcon powerSupplies
-        ; return customIcon
+        ; let detailsSection = intercalate " | " $ catMaybes $ map details powerSupplies
+        ; let padding = if not $ null detailsSection then " " else ""
+        ; return $ customIcon ++ padding ++ detailsSection
         }
     rate  (FancyBattery i) = i
 
@@ -48,8 +51,6 @@ data PowerSupply =
 isBattery (Battery _ _ _ _) = True
 isBattery _                 = False
 
-activeBatteries = (filter (\b -> status b == "Discharging")) . (filter isBattery)
-
 sysDir :: FilePath
 sysDir = "/sys/class/power_supply"
 
@@ -66,28 +67,30 @@ readPowerSupply path
 
 powerIcon :: [PowerSupply] -> String
 powerIcon list | [] /= filter (== Ac True) list = "\xf1e6" -- Active AC -> Plug
-powerIcon list | [] /= activeBatteries list =
-    if ratio < 1/8 then "\xf244"
-    else if ratio < 3/8 then "\xf243"
-    else if ratio < 5/8 then "\xf242"
-    else if ratio < 7/8 then "\xf241"
-    else "\xf240"
+powerIcon list | [] /= activeBats =
+    if ratio < 1/8      then "\xf244" -- Empty
+    else if ratio < 3/8 then "\xf243" -- Quarter
+    else if ratio < 5/8 then "\xf242" -- Half
+    else if ratio < 7/8 then "\xf241" -- 3/4
+    else                     "\xf240" -- Full
     where
         active ps = status ps == "Discharging"
         activeBats = (filter active) . (filter isBattery) $ list
         ratio = (now (head activeBats)) / (full (head activeBats))
-powerIcon list | [] /= filter (==Usb) list = "\xf287"
+powerIcon list | [] /= filter (==Usb) list = "\xf287" -- USB logo
 powerIcon _ = "\xf5d2" -- Unknown power supply -> Atom
 
---batDetails :: PowerSupply -> String
---batDetails (Battery full now power _) = printf " %s %d:%02d" percentage hoursLeft minsLeft
---    where
---        ratio = now / full
---        percentage = alertHighlightLow ratio $ show (round $ ratio * 100) ++ "%"
---        secsLeft = round $ now / power
---        hoursLeft = secsLeft `div` 3600 :: Int
---        minsLeft = (secsLeft `mod` 3600) `div` 60 :: Int
---batDetails _ = ""
+details :: PowerSupply -> Maybe String
+details (Battery full now power status)
+    | status == "Full" = Just $ printf "%s Full"
+    | otherwise = Just $ printf "%s %d:%02d" (alertHighlightLow ratio percentage) hoursLeft minsLeft
+    where
+        ratio = now / full
+        percentage = alertHighlightLow ratio $ show (round $ ratio * 100) ++ "%"
+        secsLeft = round $ now / power
+        hoursLeft = secsLeft `div` 3600 :: Int
+        minsLeft = (secsLeft `mod` 3600) `div` 60 :: Int
+details _ = Nothing
 
 readAc :: FilePath -> IO PowerSupply
 readAc prefix = readFile (prefix </> "online") >>= return . (\content -> Ac (head content == '1'))
