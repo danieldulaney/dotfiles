@@ -16,11 +16,7 @@ import Text.Regex.Posix
 
 import FancyMemory
 import FancyBattery
-
--- Utilities
-------------
--- FancyBattery plugin
-----------------------
+import FancyNetwork
 
 
 -- Main config
@@ -37,13 +33,13 @@ config = defaultConfig
     , commands =
         [ Run $ UnsafeStdinReader
         , Run $ Date "%a %d %b %Y %I:%M:%S %p" "date" 1
-        , Run $ DynNetwork [] 10
         , Run $ FancyMemory 10
         , Run $ FancyBattery 10
+        , Run $ FancyNetwork 10
         ]
     , sepChar = "%"
     , alignSep = "}{"
-    , template = "%UnsafeStdinReader% }{ " ++ "%fancymem% ┃ %fancybat% ┃ %date%"
+    , template = "%UnsafeStdinReader% }{ " ++ "%fancynet% ┃  %fancymem% ┃ %fancybat% ┃ %date%"
     }
 
 main :: IO ()

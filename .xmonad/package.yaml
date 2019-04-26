@@ -16,6 +16,8 @@ dependencies:
     - unix
     - filepath
     - directory
+    - process
+    - iproute
 
 executables:
     xmonad:
