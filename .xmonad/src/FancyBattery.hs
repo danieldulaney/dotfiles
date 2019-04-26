@@ -66,8 +66,8 @@ readPowerSupply path
     where matches s = (isPrefixOf s) . takeFileName
 
 powerIcon :: [PowerSupply] -> String
-powerIcon list | [] /= filter (== Ac True) list = "\xf1e6" -- Active AC -> Plug
-powerIcon list | [] /= activeBats =
+powerIcon list | (not . null) $ filter (== Ac True) list = "\xf1e6" -- Active AC -> Plug
+powerIcon list | (not . null) activeBats =
     if ratio < 1/8      then "\xf244" -- Empty
     else if ratio < 3/8 then "\xf243" -- Quarter
     else if ratio < 5/8 then "\xf242" -- Half
@@ -82,7 +82,7 @@ powerIcon _ = "\xf5d2" -- Unknown power supply -> Atom
 
 details :: PowerSupply -> Maybe String
 details (Battery full now power status)
-    | status == "Full" = Just $ printf "%s Full"
+    | status == "Full" = Just $ printf "%s Full" (alertHighlightLow ratio percentage)
     | otherwise = Just $ printf "%s %d:%02d" (alertHighlightLow ratio percentage) hoursLeft minsLeft
     where
         ratio = now / full
