@@ -115,12 +115,13 @@ viewBrowser = viewProgram "web" 0 "Firefox Developer Edition" "firefox-developer
 snapBrowser = snapProgram "web" 0 "Firefox Developer Edition"
 
 viewEmail = viewProgram "email" 0 "Thunderbird" "thunderbird"
-snapEmail = viewProgram "email" 0 "Thunderbird"
+snapEmail = snapProgram "email" 0 "Thunderbird"
 
 myWorkspaces = ["web", "email"] ++ map show [1..9]
 
 myManageHook = composeAll
     [ snapBrowser
+    , snapEmail
     ]
 
 --myManageHook = composeAll
