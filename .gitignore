@@ -45,11 +45,6 @@
 # tmux
 !.tmux.conf
 
-# Old docker setup
-!docker_start.bat
-!dev-env/
-!dev-env/**
-
 # Windows-only
 !putty_setup.reg
 
