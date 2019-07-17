@@ -5,7 +5,9 @@
 !.gitmodules
 
 # Config folder as a whole
-!.config/
+!.config
+!.config/awesome/
+!.config/awesome/**
 
 # Global git configs
 !.gitconfig

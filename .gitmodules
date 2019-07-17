@@ -16,3 +16,6 @@
 [submodule ".vim/pack/plugins/start/syntastic"]
 	path = .vim/pack/plugins/start/syntastic
 	url = https://github.com/vim-syntastic/syntastic.git
+[submodule ".config/awesome/sharedtags"]
+	path = .config/awesome/sharedtags
+	url = https://github.com/Drauthius/awesome-sharedtags.git
