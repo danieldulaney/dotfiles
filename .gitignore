@@ -1,24 +1,59 @@
-**
+*
 
+# Repository metadata
 !.gitignore
+!.gitmodules
+
+# Config folder as a whole
+!.config/
+
+# Global git configs
+!.gitconfig
+
+# Xresources and its folder
 !.Xresources
-!.Xresources.d
+!.Xresources.d/
+!.Xresources.d/**
+
+# Zsh stuff
+!.zshrc
+!oh-my-zsh/
+
+# Bash stuff
 !.bash_profile
 !.bashrc
-!.fehbg
-!.ghci
-!.gitconfig
-!.gitmodules
-!.tmux.conf
-!.vim
+
+# Vim stuff
 !.vimrc
+!.vim/
+!.vim/**
+.vim/.netrwhist
+
+# XMonad/haskell stuff
+!.ghci
 !.xmobarrc
-!.xmonad
-!.zshrc
-!backgrounds
-!dev-env
+!.xmonad/
+!.xmonad/**
+
+# Feh and background files
+!.fehbg
+!backgrounds/
+!backgrounds/**
+
+# tmux
+!.tmux.conf
+
+# Old docker setup
 !docker_start.bat
-!oh-my-zsh
+!dev-env/
+!dev-env/**
+
+# Windows-only
 !putty_setup.reg
-!scripts
+
+# General-purpose scripts
+!scripts/
+!scripts/**
+
+# Not needed on most modern systems
 !ssh-agent.service
