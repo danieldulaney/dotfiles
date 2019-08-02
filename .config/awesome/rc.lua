@@ -316,7 +316,8 @@ keymaps = {
             awful.key({ "Shift" }, "k", function() awful.client.swap.byidx(-1) end),
 
             -- Prompt
-            awful.key({ }, "r", function() mypromptbox:run()
+            awful.key({ }, "r", function()
+                mypromptbox:run()
                 mapstack:pop()
             end),
 
@@ -330,7 +331,6 @@ keymaps = {
                 awful.screen.focus(utility_screen)
                 sharedtags.viewonly(tags["web"], awful.screen.focused())
                 awful.spawn.raise_or_spawn("firefox-developer-edition", {}, noop, "firefox-autolaunch")
-                mapstack:pop()
             end),
 
             awful.key({ "Shift" }, "w", function()
@@ -343,7 +343,6 @@ keymaps = {
                 awful.screen.focus(utility_screen)
                 sharedtags.viewonly(tags["email"], awful.screen.focused())
                 awful.spawn.raise_or_spawn("thunderbird", {}, noop, "thunderbird-autolaunch")
-                mapstack:pop()
             end),
 
             awful.key({ "Shift" }, "e", function()
