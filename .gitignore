@@ -21,10 +21,6 @@
 !.zshrc
 !oh-my-zsh/
 
-# Bash stuff
-!.bash_profile
-!.bashrc
-
 # Vim stuff
 !.vimrc
 !.vim/
