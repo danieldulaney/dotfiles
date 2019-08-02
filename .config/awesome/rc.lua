@@ -89,6 +89,9 @@ local function set_wallpaper(s)
     end
 end
 
+-- Set for every screen
+awful.screen.connect_for_each_screen(set_wallpaper)
+
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 -- }}}
@@ -299,7 +302,6 @@ keymaps = {
 
                 need_to_spawn = true
                 for c in awful.client.iterate(function() return true end) do
-                    naughty.notify({text = c.class})
                     if c.class == "firefoxdeveloperedition" and c.first_tag == tags["web"] then
                         need_to_spawn = false
                         break
