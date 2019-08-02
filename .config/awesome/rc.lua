@@ -296,7 +296,19 @@ keymaps = {
             awful.key({ }, "w", function()
                 awful.screen.focus(utility_screen)
                 sharedtags.viewonly(tags["web"], awful.screen.focused())
-                awful.spawn.raise_or_spawn("firefox-developer-edition", {}, noop, "firefox-autolaunch")
+
+                need_to_spawn = true
+                for c in awful.client.iterate(function() return true end) do
+                    naughty.notify({text = c.class})
+                    if c.class == "firefoxdeveloperedition" and c.first_tag == tags["web"] then
+                        need_to_spawn = false
+                        break
+                    end
+                end
+
+                if need_to_spawn then
+                    awful.spawn.spawn("firefox-developer-edition")
+                end
             end),
 
             awful.key({ "Shift" }, "w", function()
@@ -308,7 +320,18 @@ keymaps = {
             awful.key({ }, "e", function()
                 awful.screen.focus(utility_screen)
                 sharedtags.viewonly(tags["email"], awful.screen.focused())
-                awful.spawn.raise_or_spawn("thunderbird", {}, noop, "thunderbird-autolaunch")
+
+                need_to_spawn = true
+                for c in awful.client.iterate(function() return true end) do
+                    if c.class == "thunderbird" and c.first_tag == tags["email"] then
+                        need_to_spawn = false
+                        break
+                    end
+                end
+
+                if need_to_spawn then
+                    awful.spawn.spawn("thunderbird")
+                end
             end),
 
             awful.key({ "Shift" }, "e", function()
@@ -414,6 +437,7 @@ clientbuttons = gears.table.join(
         awful.mouse.client.resize(c)
     end)
 )
+-- }}}
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
@@ -466,17 +490,8 @@ awful.rules.rules = {
       }},
 
     -- Add titlebars to normal clients and dialogs
-    { rule_any = {type = { "dialog" }
-      }, properties = { titlebars_enabled = true }
+    { rule_any = {type = { "dialog" } }, properties = { titlebars_enabled = true }
     },
-
-    -- Set Firefox to always end up on "web"
-    { rule = { role = "browser" },
-    properties = { tag = tags["web"] } },
-
-    -- Set Thunderbird to always end up on "email"
-    { rule = { class = "Mail" },
-    properties = { tag = tags["email"] } },
 }
 -- }}}
 
@@ -549,26 +564,21 @@ client.connect_signal("focus", function(c)
     m = mouse.coords()
     geom = c:geometry()
 
-    if (m.x < geom.x 
-        or m.x > geom.x + geom.width
-        or m.y < geom.y
-        or m.y > geom.y + geom.height) then
+    slop = 2
+
+    if (m.x + slop < geom.x 
+        or m.x - slop > geom.x + geom.width
+        or m.y + slop < geom.y
+        or m.y + slop > geom.y + geom.height) then
 
         mouse.coords({
             x = geom.x + geom.width/2,
             y = geom.y + geom.height/2,
         }, true)
     end
-
-    -- Redraw wibar
-    --mywibox:emit_signal("widget::layout_changed")
-    --mywibox:emit_signal("widget::redraw_needed")
 end)
 
-mywibox:connect_signal("widget::redraw_needed", function(...)
-    naughty.notify{text="hi"}
-end)
-
+-- Set borders and opacity on for unfocused windows
 client.connect_signal("unfocus", function(c)
     c.border_color = beautiful.border_normal
     c.opacity = 0.9
