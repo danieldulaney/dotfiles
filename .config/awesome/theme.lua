@@ -6,7 +6,6 @@
 local theme_assets = require("beautiful.theme_assets")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
-local xrdb = xresources.get_current_theme()
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
 local solarized = require("solarized")
@@ -15,24 +14,26 @@ local solarized = require("solarized")
 local theme = dofile(themes_path.."default/theme.lua")
 -- load vector assets' generators for this theme
 
-theme.font          = "Fira Code"
+theme.font          = "Fira Code, Font Awesome 5 Free-Solid"
 
 theme.bg_normal     = solarized.background
 theme.bg_focus      = solarized.foreground
 theme.bg_urgent     = solarized.red
+theme.bg_warning    = solarized.yellow
 theme.bg_minimize   = solarized.magenta
 theme.bg_systray    = theme.bg_normal
 
 theme.fg_normal     = solarized.foreground
 theme.fg_focus      = theme.bg_normal
 theme.fg_urgent     = theme.bg_normal
+theme.fg_warning    = theme.bg_normal
 theme.fg_minimize   = theme.bg_normal
 
 theme.useless_gap   = dpi(5)
 theme.border_width  = dpi(1)
-theme.border_normal = xrdb.color0
-theme.border_focus  = xrdb.color4
-theme.border_marked = xrdb.color10
+theme.border_normal = solarized.base02
+theme.border_focus  = solarized.blue
+theme.border_marked = solarized.violet
 
 -- There are other variable sets
 -- overriding the default one when
@@ -86,7 +87,7 @@ theme = theme_assets.recolor_titlebar(
     theme, darker(theme.fg_normal, -60), "normal", "hover"
 )
 theme = theme_assets.recolor_titlebar(
-    theme, xrdb.color1, "normal", "press"
+    theme, solarized.red, "normal", "press"
 )
 theme = theme_assets.recolor_titlebar(
     theme, theme.fg_focus, "focus"
@@ -95,7 +96,7 @@ theme = theme_assets.recolor_titlebar(
     theme, darker(theme.fg_focus, -60), "focus", "hover"
 )
 theme = theme_assets.recolor_titlebar(
-    theme, xrdb.color1, "focus", "press"
+    theme, solarized.red, "focus", "press"
 )
 
 -- Define the icon theme for application icons. If not set then the icons

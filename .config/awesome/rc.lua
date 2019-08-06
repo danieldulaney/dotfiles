@@ -105,12 +105,16 @@ primary_screen = screen[math.min(screen:count(), 2)]
 utility_screen = screen[math.min(screen:count(), 3)]
 
 -- {{{ Textclock widget
-textclock = wibox.widget.textclock(" %a %d %b %Y, %I:%M %p ")
+textclock = wibox.widget.textclock("%a %d %b %Y, %I:%M %p")
+-- }}}
+
+-- {{{ Battery widget
+local battery_widget = require("battery")
 -- }}}
 
 -- {{{ Mode indicator widget
-modewidget = wibox.widget.textbox()
-modewidget.markup = "(???)"
+mode_widget = wibox.widget.textbox()
+mode_widget.markup = "(???)"
 -- }}}
 
 -- {{{ Tag list widget
@@ -184,8 +188,10 @@ mywibox:setup {
     wibox.widget.base.empty_widget(),
     { -- Right widgets
         layout = wibox.layout.fixed.horizontal,
-        modewidget,
-        wibox.widget.systray(),
+        spacing_widget = wibox.widget.separator,
+        spacing = 20,
+        battery_widget,
+        mode_widget,
         textclock,
     },
 }
@@ -205,14 +211,14 @@ mapstack = {}
 
 function mapstack:push(map)
     root.keys(map.map)
-    modewidget.markup = map.name
+    mode_widget.markup = map.name
     mapstack[table.maxn(mapstack) + 1] = map
 end
 
 function mapstack:pop()
     mapstack[table.maxn(mapstack)] = nil
     root.keys(mapstack[table.maxn(mapstack)].map)
-    modewidget.text = mapstack[table.maxn(mapstack)].name
+    mode_widget.text = mapstack[table.maxn(mapstack)].name
 end
 
 function noop(...) end
@@ -260,7 +266,7 @@ keymaps = {
         )
     },
     manip = {
-        name = "<span background='" .. solarized.yellow .. "' foreground='" .. beautiful.bg_normal .. "'>CTRL</span>",
+        name = "<span background='" .. beautiful.bg_warning .. "' foreground='" .. beautiful.fg_warning .. "'>CTRL</span>",
         map = gears.table.join(
             -- Leave manip mode
             awful.key({ }, "Escape", mapstack.pop),
