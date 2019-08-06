@@ -97,12 +97,36 @@ screen.connect_signal("property::geometry", set_wallpaper)
 -- }}}
 
 -- {{{ Wibar
--- Textclock widget
-textclock = wibox.widget.textclock(" %a %d %b %Y, %I:%M %p ")
 
--- Mode indicator widget
+-- Primary screen -- gets the wibox
+primary_screen = screen[math.min(screen:count(), 2)]
+
+-- Utility screen -- browser and email
+utility_screen = screen[math.min(screen:count(), 3)]
+
+-- {{{ Textclock widget
+textclock = wibox.widget.textclock(" %a %d %b %Y, %I:%M %p ")
+-- }}}
+
+-- {{{ Mode indicator widget
 modewidget = wibox.widget.textbox()
 modewidget.markup = "(???)"
+-- }}}
+
+-- {{{ Tag list widget
+local tags = sharedtags({
+    { name = 1, layout = awful.layout.layouts[1] },
+    { name = 2, layout = awful.layout.layouts[1] },
+    { name = 3, layout = awful.layout.layouts[1] },
+    { name = 4, layout = awful.layout.layouts[1] },
+    { name = 5, layout = awful.layout.layouts[1] },
+    { name = 6, layout = awful.layout.layouts[1] },
+    { name = 7, layout = awful.layout.layouts[1] },
+    { name = 8, layout = awful.layout.layouts[1] },
+    { name = 9, layout = awful.layout.layouts[1] },
+    { name = "web", layout = awful.layout.layouts[1] },
+    { name = "email", layout = awful.layout.layouts[1] },
+})
 
 -- Button mapping for the taglist
 local taglist_buttons = gears.table.join(
@@ -122,32 +146,9 @@ local taglist_buttons = gears.table.join(
                     awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
                 )
 
-local tags = sharedtags({
-    { name = 1, layout = awful.layout.layouts[1] },
-    { name = 2, layout = awful.layout.layouts[1] },
-    { name = 3, layout = awful.layout.layouts[1] },
-    { name = 4, layout = awful.layout.layouts[1] },
-    { name = 5, layout = awful.layout.layouts[1] },
-    { name = 6, layout = awful.layout.layouts[1] },
-    { name = 7, layout = awful.layout.layouts[1] },
-    { name = 8, layout = awful.layout.layouts[1] },
-    { name = 9, layout = awful.layout.layouts[1] },
-    { name = "web", layout = awful.layout.layouts[1] },
-    { name = "email", layout = awful.layout.layouts[1] },
-})
-
 awful.screen.connect_for_each_screen(function(s)
     sharedtags.viewonly(tags[s.index], s)
 end)
-
--- Primary screen -- gets the wibox
-primary_screen = screen[math.min(screen:count(), 2)]
-
--- Utility screen -- browser and email
-utility_screen = screen[math.min(screen:count(), 3)]
-
--- Create a promptbox for each screen
-mypromptbox = awful.widget.prompt()
 
 -- Create a taglist widget
 mytaglist = awful.widget.taglist {
@@ -160,8 +161,13 @@ mytaglist = awful.widget.taglist {
         spacing = 1
     },
 }
+-- }}}
 
--- Create the wibox
+-- {{{ Promptbox widget
+mypromptbox = awful.widget.prompt()
+-- }}}
+
+-- {{{ Create the wibox
 mywibox = awful.wibar({
     position = "top",
     screen = primary_screen,
@@ -183,6 +189,8 @@ mywibox:setup {
         textclock,
     },
 }
+-- }}}
+
 -- }}}
 
 -- {{{ Global mouse bindings
