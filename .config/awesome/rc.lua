@@ -112,6 +112,10 @@ textclock = wibox.widget.textclock("%a %d %b %Y, %I:%M %p")
 local battery_widget = require("battery")
 -- }}}
 
+-- {{{ Brightness widget
+local brightness_widget = require("brightness")
+-- }}}
+
 -- {{{ Mode indicator widget
 mode_widget = wibox.widget.textbox()
 mode_widget.markup = "(???)"
@@ -190,6 +194,7 @@ mywibox:setup {
         layout = wibox.layout.fixed.horizontal,
         spacing_widget = wibox.widget.separator,
         spacing = 20,
+        brightness_widget,
         battery_widget,
         mode_widget,
         textclock,

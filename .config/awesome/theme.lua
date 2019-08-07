@@ -9,6 +9,7 @@ local dpi = xresources.apply_dpi
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
 local solarized = require("solarized")
+local gears = require("gears")
 
 -- inherit default theme
 local theme = dofile(themes_path.."default/theme.lua")
@@ -34,6 +35,10 @@ theme.border_width  = dpi(1)
 theme.border_normal = solarized.base02
 theme.border_focus  = solarized.blue
 theme.border_marked = solarized.violet
+
+theme.slider_bar_height = dpi(3)
+theme.slider_handle_width = dpi(10)
+theme.slider_handle_shape = gears.shape.circle
 
 -- There are other variable sets
 -- overriding the default one when
