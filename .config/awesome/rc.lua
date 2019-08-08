@@ -175,13 +175,17 @@ mytaglist = awful.widget.taglist {
 mypromptbox = awful.widget.prompt()
 -- }}}
 
--- {{{ Create the wibox
-mywibox = awful.wibar({
+-- {{{ Pomodoro
+pomo_widget = require("pomo")
+-- }}}
+
+-- {{{ Create the wibar
+mywibox = awful.wibar {
     position = "top",
     screen = primary_screen,
-})
+}
 
--- Add widgets to the wibox
+-- Add widgets to the wibar
 mywibox:setup {
     layout = wibox.layout.align.horizontal,
     { -- Left widgets
@@ -194,6 +198,7 @@ mywibox:setup {
         layout = wibox.layout.fixed.horizontal,
         spacing_widget = wibox.widget.separator,
         spacing = 20,
+        pomo_widget,
         brightness_widget,
         battery_widget,
         mode_widget,
