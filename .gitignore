@@ -12,7 +12,9 @@
 # Global git configs
 !.gitconfig
 
-# Xresources and its folder
+# Xinit-related stuff
+!.xinitrc
+!.Xmodmap
 !.Xresources
 !.Xresources.d/
 !.Xresources.d/**
