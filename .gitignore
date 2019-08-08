@@ -47,8 +47,8 @@
 !putty_setup.reg
 
 # General-purpose scripts
-!scripts/
-!scripts/**
+!.scripts/
+!.scripts/**
 
 # Not needed on most modern systems
 !ssh-agent.service

@@ -75,7 +75,7 @@ export VISUAL=vim
 export EDITOR=vim
 
 # Add the .dotfiles scripts folder to the path
-export PATH="$HOME/.dotfiles/scripts:$PATH"
+export PATH="$HOME/.scripts:$PATH"
 
 # If the SSH_AUTH_SOCK env variable isn't set, set it
 if [ ! -v SSH_AUTH_SOCK ]; then
