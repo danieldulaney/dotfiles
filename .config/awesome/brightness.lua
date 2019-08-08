@@ -64,7 +64,7 @@ function set_brightness(value)
     if not set_brightness_running then
         set_brightness_running = true
 
-        awful.spawn.easy_async("light -S " .. desired_brightness, function(stdout, stderr, exitreason, exitcode)
+        awful.spawn.easy_async("light -S " .. tostring(value), function(stdout, stderr, exitreason, exitcode)
             set_brightness_running = false
             set_brightness_text(value)
         end)
