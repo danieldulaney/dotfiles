@@ -35,10 +35,9 @@
 !.xmonad/
 !.xmonad/**
 
-# Feh and background files
-!.fehbg
-!backgrounds/
-!backgrounds/**
+# Background files
+!.backgrounds/
+!.backgrounds/**
 
 # tmux
 !.tmux.conf

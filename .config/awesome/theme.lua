@@ -130,7 +130,7 @@ end
 local is_dark_bg = (bg_numberic_value < 383)
 
 -- Generate wallpaper:
-theme.wallpaper = "~/.dotfiles/backgrounds/vaporwave-sunset.jpg"
+theme.wallpaper = "~/.backgrounds/vaporwave-sunset.jpg"
 
 return theme
 
