@@ -21,7 +21,7 @@
 
 # Zsh stuff
 !.zshrc
-!oh-my-zsh/
+!.oh-my-zsh/
 
 # Vim stuff
 !.vimrc
