@@ -43,9 +43,6 @@
 # tmux
 !.tmux.conf
 
-# Windows-only
-!putty_setup.reg
-
 # General-purpose scripts
 !.scripts/
 !.scripts/**
