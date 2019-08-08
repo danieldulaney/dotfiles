@@ -34,7 +34,7 @@ local brightness_slider = wibox.widget {
         visible = false,
 }
 
-local brightness_text = wibox.widget.textbox(" ???%")
+local brightness_text = wibox.widget.textbox(" ???")
 
 local brightness_widget = wibox.widget {
     layout = wibox.layout.fixed.horizontal,
