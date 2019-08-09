@@ -19,6 +19,7 @@ errecho() {
 }
 
 for dir in ~/aur/*/; do
+    ok=1
     pushd $dir > /dev/null
     pwd
     git fetch --quiet
@@ -38,11 +39,26 @@ for dir in ~/aur/*/; do
 
         if (( $ahead > 0 )); then
             warnecho "$local_branch is $ahead ahead"
+            ok=0
         fi
 
         if (( $behind > 0 )); then
             warnecho "$local_branch is $behind behind"
+            ok=0
         fi
+    fi
+
+    pkgname=$(echo 'echo $pkgname' | cat PKGBUILD - | bash)
+    local_version=$(echo 'echo $pkgver-$pkgrel' | cat PKGBUILD - | bash)
+    remote_version=$(curl -Ls 'https://aur.archlinux.org/rpc/?v=5&type=info&arg='"$pkgname" | jq -r '.results[0].Version')
+
+    if [[ $local_version != $remote_version ]]; then
+        warnecho "Local version $local_version doesn't match AUR version $remote_version"
+        ok=0
+    fi
+
+    if [ $ok ]; then
+        okecho "Up-to-date"
     fi
 
     popd > /dev/null
