@@ -129,4 +129,4 @@ alias clip='xclip -selection clipboard'
 # vi should open vim
 alias vi='vim'
 
-if type neofetch >> /dev/null; then; neofetch --disable gpu; fi
+if type neofetch >> /dev/null; then neofetch; fi

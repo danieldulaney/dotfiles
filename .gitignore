@@ -15,6 +15,10 @@
 !.config/kitty/
 !.config/kitty/**
 
+# Neofetch config
+!.config/neofetch/
+!.config/neofetch/**
+
 # Global git configs
 !.gitconfig
 
@@ -51,6 +55,10 @@
 # General-purpose scripts
 !.scripts/
 !.scripts/**
+
+# Other tools
+!.misc/
+!.misc/**
 
 # Not needed on most modern systems
 !ssh-agent.service
