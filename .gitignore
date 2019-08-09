@@ -6,8 +6,14 @@
 
 # Config folder as a whole
 !.config
+
+# AwesomeWM
 !.config/awesome/
 !.config/awesome/**
+
+# Kitty terminal emulator
+!.config/kitty/
+!.config/kitty/**
 
 # Global git configs
 !.gitconfig
