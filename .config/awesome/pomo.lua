@@ -13,10 +13,6 @@ local timers = {
         time = 5 * 60,
         name = "B",
     },
-    {
-        time = 5,
-        name = "T",
-    }
 }
 
 -- {{{ Utility functions
@@ -42,7 +38,7 @@ local pomo_widget = wibox.widget.textbox("hi there")
 -- Widget state
 pomo_widget.curr_timer = 1
 pomo_widget.timer_start = nil
-pomo_widget.timer_alerted = false
+pomo_widget.timer_notification = nil
 
 pomo_widget.timer_name = function(self)
     return timers[self.curr_timer].name
@@ -99,6 +95,17 @@ pomo_widget.update = function(self)
         self:timer_name(),
         sec_to_time(self:timer_left(now))
     )
+
+    if self:timer_finished(now) and self.timer_notification == nil then
+        self.timer_notification = naughty.notify {
+            text = "Timer finished",
+            position = "top_middle",
+            timeout = 0,
+            fg = beautiful.fg_warning,
+            bg = beautiful.bg_warning,
+            destroy = function() pomo_widget:cancel() end,
+        }
+    end
 end
 
 pomo_widget.start = function(self, restart)
@@ -110,8 +117,13 @@ pomo_widget.start = function(self, restart)
 end
 
 pomo_widget.cancel = function(self)
+    if self.timer_notification ~= nil then
+        naughty.destroy(self.timer_notification)
+    end
+
     self.timer_start = nil
     self.timer_alerted = false
+    self.timer_notification = nil
     self:update()
 end
 
@@ -144,15 +156,6 @@ gears.timer {
     call_now = true,
     autostart = true,
     callback = function() pomo_widget:update() end,
-}
-
-naughty.notify {
-    text = "Timer finished",
-    position = "top_middle",
-    timeout = 0,
-    fg = beautiful.fg_warning,
-    bg = beautiful.bg_warning,
-    destroy = function() pomo_widget:cancel() end,
 }
 
 return pomo_widget
