@@ -1,0 +1,9 @@
+[Unit]
+Description=X compositor
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/compton
+
+[Install]
+WantedBy=default.target

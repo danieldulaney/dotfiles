@@ -19,6 +19,12 @@
 !.config/neofetch/
 !.config/neofetch/**
 
+# Systemd user units
+!.config/systemd/
+!.config/systemd/user/
+!.config/systemd/user/compton.service
+!.config/systemd/user/udiskie.service
+
 # Global git configs
 !.gitconfig
 
@@ -59,6 +65,3 @@
 # Other tools
 !.misc/
 !.misc/**
-
-# Not needed on most modern systems
-!ssh-agent.service
