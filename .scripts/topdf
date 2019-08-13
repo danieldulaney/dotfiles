@@ -1,0 +1,6 @@
+#! /usr/bin/env sh
+
+outfile="${1:-output.pdf}"
+infile=/dev/stdin
+
+enscript -p - < "$infile" | ps2pdf - "$outfile"
