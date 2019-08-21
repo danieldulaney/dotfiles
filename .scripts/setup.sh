@@ -1,20 +1,57 @@
-#! /usr/bin/env sh
+#! /usr/bin/env bash
 
-# Make sure the repo was cloned
-if [ ! -d ~/.dotfiles ] ; then
-    git clone --recursive https://github.com/danieldulaney/dotfiles.git ~/.dotfiles
-fi
+function yesno() {
+    while true ; do
+        read -r -p "${1:-Are You Sure?} [Y/n] " input
+
+        case $input in
+            [yY][eE][sS]|[yY])
+                return 0
+                ;;
+            [nN][oO]|[nN])
+                return 1
+                ;;
+            '')
+                return 0
+                ;;
+            *)
+                echo 'Yes or no'
+                ;;
+        esac
+    done
+}
+
+cd
 
 # Make sure the repo was cloned recursively
-(cd ~/.dotfiles && git submodule update --init --recursive)
+###########################################
+echo "Git recursive cloning"
+git submodule update --init --recursive
 
-# Symlink to dotfiles
-ln -fs ~/.dotfiles/.zshrc ~
-ln -fs ~/.dotfiles/.tmux.conf ~
-ln -fs ~/.dotfiles/.vimrc ~
-ln -fs ~/.dotfiles/.gitconfig ~
-ln -fs ~/.dotfiles/.xmonad ~
-ln -fs ~/.dotfiles/.Xresources ~
-ln -fs ~/.dotfiles/.Xresources.d ~
-ln -fs ~/.dotfiles/.fehbg ~
-ln -fs ~/.dotfiles/.ghci ~
+# Install required packages
+###########################
+
+echo "Checking required packages..."
+
+pkglist=("zsh" "kitty" "awesome" "compton" "udiskie")
+
+for pkg in ${pkglist[@]} ; do
+    if ! pacman -Q $pkg; then
+        sudo pacman -S $pkg
+    fi
+done
+
+# Enable systemd user units
+###########################
+
+unitlist=("compton.service" "udiskie.service")
+
+for unit in ${unitlist[@]} ; do
+    if yesno "Start $unit?"; then
+        systemctl --user start "$unit"
+    fi
+
+    if yesno "Enable $unit?"; then
+        systemctl --user enable "$unit"
+    fi
+done
