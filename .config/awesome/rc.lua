@@ -384,23 +384,24 @@ for i = 1, 9 do
     keymaps.manip.map = gears.table.join(keymaps.manip.map,
         -- View tag only.
         awful.key({ }, "#" .. i + 9,
-                  function ()
-                        local screen = awful.screen.focused()
-                        local tag = tags[i]
-                        if tag then
-                           sharedtags.viewonly(tag, screen)
-                        end
-                  end),
+            function ()
+                local screen = awful.screen.focused()
+                local tag = tags[i]
+                if tag then
+                   sharedtags.viewonly(tag, screen)
+                end
+            end),
         -- Move client to tag.
         awful.key({ "Shift" }, "#" .. i + 9,
-                  function ()
-                      if client.focus then
-                          local tag = tags[i]
-                          if tag then
-                              client.focus:move_to_tag(tag)
-                          end
-                     end
-                  end)
+            function ()
+                if client.focus then
+                    local tag = tags[i]
+
+                    if tag then
+                        client.focus:move_to_tag(tag)
+                    end
+                end
+            end)
     )
 end
 
