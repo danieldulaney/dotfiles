@@ -390,6 +390,10 @@ for i = 1, 9 do
                 if tag then
                    sharedtags.viewonly(tag, screen)
                 end
+
+                -- Update taglist
+                -- TODO: When (if?) this gets stabilized, change to it
+                mytaglist._do_taglist_update()
             end),
         -- Move client to tag.
         awful.key({ "Shift" }, "#" .. i + 9,
