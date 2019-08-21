@@ -79,7 +79,7 @@ watch("acpi -ab", 1,
             end
         end
 
-        if 0 <= batt_level and batt_level < 1 then
+        if batt_level ~= nil and 0 <= batt_level and batt_level < 1 then
             text = string.format(" %2.0f%%", batt_level * 100)
         elseif batt_level == 1 then
             text = " 100"
