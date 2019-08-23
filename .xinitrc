@@ -3,5 +3,7 @@
 
 export LANG=en_US.UTF-8
 
+compton &
+
 # Disable caps lock
 awesome
