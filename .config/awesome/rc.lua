@@ -134,6 +134,7 @@ local tags = sharedtags({
     { name = 9, layout = awful.layout.layouts[1] },
     { name = "web", layout = awful.layout.layouts[1] },
     { name = "email", layout = awful.layout.layouts[1] },
+    { name = "vm", layout = awful.layout.layouts[1] },
 })
 
 -- Button mapping for the taglist
@@ -363,6 +364,16 @@ keymaps = {
             awful.key({ "Shift" }, "e", function()
                 if client.focus then
                     client.focus:move_to_tag(tags["email"])
+                end
+            end),
+
+            awful.key({ }, "v", function()
+                sharedtags.viewonly(tags["vm"], awful.screen.focused())
+            end),
+
+            awful.key({ "Shift" }, "v", function()
+                if client.focus then
+                    client.focus:move_to_tag(tags["vm"])
                 end
             end),
 
