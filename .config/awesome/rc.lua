@@ -158,6 +158,10 @@ awful.screen.connect_for_each_screen(function(s)
     sharedtags.viewonly(tags[s.index], s)
 end)
 
+for _, tag in ipairs(tags) do
+    tag:connect_signal("tagged", function() mytaglist._do_taglist_update() end)
+end
+
 -- Create a taglist widget
 mytaglist = awful.widget.taglist {
     screen = primary_screen,
