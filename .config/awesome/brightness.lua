@@ -76,12 +76,13 @@ end
 
 function check_brightness_async()
     awful.spawn.easy_async("light -G", function(stdout, stderr, exitreason, exitcode)
-        naughty.notify{ text = "finished" }
         if stderr:len() > 0 then
             set_brightness_text(nil)
 
             brightness_slider.active = false
         else
+            local brightness = tonumber(stdout)
+
             set_brightness_text(brightness)
 
             brightness_slider.active = true 
