@@ -69,7 +69,6 @@ manipkey = "#66"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
-    awful.layout.suit.max.fullscreen,
 }
 
 -- Menubar configuration
@@ -309,13 +308,13 @@ keymaps = {
             awful.key({ "Shift" }, "j", function() awful.client.swap.byidx(1) end),
             awful.key({ "Shift" }, "k", function() awful.client.swap.byidx(-1) end),
 
-            -- Prompt
+            -- Prompt to run program
             awful.key({ }, "r", function()
                 mypromptbox:run()
                 mapstack:pop()
             end),
 
-            -- Spawn common software (leaving manip mode after)
+            -- Spawn terminal (leaving manip mode after)
             awful.key({ }, "Return", function()
                 awful.spawn(terminal)
                 mapstack:pop()
@@ -378,7 +377,21 @@ keymaps = {
             end),
 
             -- Toggle layouts
-            awful.key({ }, "space", function() awful.layout.inc(1) end),
+            awful.key({ }, "space", function()
+                local t = awful.screen.focused().selected_tag
+
+                local maximize = false
+
+                if client.focus then
+                    maximize = not client.focus.maximized
+                    client.focus:raise()
+                end
+
+                for _, c in ipairs(t:clients()) do
+                    c.maximized = maximize
+                end
+
+            end),
             awful.key({ "Shift" }, "space", function() awful.layout.inc(-1) end),
 
             -- Restart and quit Awesome itself
