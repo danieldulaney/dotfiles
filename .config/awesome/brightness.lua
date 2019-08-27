@@ -32,13 +32,14 @@ local brightness_slider = wibox.widget {
         minimum = 1,
         maximum = 100,
         visible = false,
+        active = false,
 }
 
-local brightness_text = wibox.widget.textbox(" ???")
+local brightness_text = wibox.widget.textbox("")
 
 local brightness_widget = wibox.widget {
     layout = wibox.layout.fixed.horizontal,
-    spacing = 10,
+    spacing = 0,
 
     brightness_slider,
     brightness_text,
@@ -49,8 +50,10 @@ local brightness_widget = wibox.widget {
 
 -- Set the text while leaving the slider unchanged
 function set_brightness_text(value)
-    if value == 100 then
-        brightness_text.markup = string.format(" 100", value)
+    if value == nil then
+        brightness_text.markup = ""
+    elseif value == 100 then
+        brightness_text.markup = " 100"
     else
         brightness_text.markup = string.format(" %2d%%", value)
     end
@@ -73,25 +76,48 @@ end
 
 function check_brightness_async()
     awful.spawn.easy_async("light -G", function(stdout, stderr, exitreason, exitcode)
-        brightness = tonumber(stdout)
-        brightness_slider.value = brightness
-        set_brightness_text(brightness)
+        naughty.notify{ text = "finished" }
+        if stderr:len() > 0 then
+            set_brightness_text(nil)
+
+            brightness_slider.active = false
+        else
+            set_brightness_text(brightness)
+
+            brightness_slider.active = true 
+            brightness_slider.value = brightness
+        end
     end)
 end
 -- }}}
 
 -- {{{ External event callbacks
+function set_slider_visibility(visible)
+
+    if brightness_slider.active or not visible then
+
+        brightness_slider.visible = visible
+
+        if visible then
+            brightness_widget.spacing = 10
+        else
+            brightness_widget.spacing = 0
+        end
+
+    end
+end
+
 brightness_slider:connect_signal("property::value", function(widget)
     set_brightness(widget.value)
 end)
 
 brightness_widget:connect_signal("mouse::leave", function()
-    brightness_slider.visible = false
+    set_slider_visibility(false)
 end)
 
 brightness_text:buttons(
     awful.button({ }, 1, function()
-        brightness_slider.visible = not brightness_slider.visible
+        set_slider_visibility(not brightness_slider.visible)
     end)
 )
 -- }}}
