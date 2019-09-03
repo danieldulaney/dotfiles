@@ -115,6 +115,10 @@ local battery_widget = require("battery")
 local brightness_widget = require("brightness")
 -- }}}
 
+-- {{{ Network widget
+local network_widget = require("network")
+-- }}}
+
 -- {{{ Mode indicator widget
 mode_widget = wibox.widget.textbox()
 mode_widget.markup = "(???)"
@@ -203,6 +207,7 @@ mywibox:setup {
         spacing_widget = wibox.widget.separator,
         spacing = 20,
         pomo_widget,
+        network_widget,
         brightness_widget,
         battery_widget,
         mode_widget,
