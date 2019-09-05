@@ -104,7 +104,7 @@ primary_screen = screen[math.min(screen:count(), 2)]
 utility_screen = screen[math.min(screen:count(), 3)]
 
 -- {{{ Textclock widget
-textclock = wibox.widget.textclock("%a %d %b %Y, %I:%M %p")
+textclock = wibox.widget.textclock("%a %d %b %Y, %I:%M %p %Z")
 -- }}}
 
 -- {{{ Battery widget
