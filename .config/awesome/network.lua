@@ -81,9 +81,9 @@ function update_remote()
 
     awful.spawn.easy_async("curl --head example.com", function(_, _, _, exitcode)
         if exitcode == 0 then
-            network_widget:set_icon2("")
+            network_widget:set_icon2("")
         else
-            network_widget:set_icon2("")
+            network_widget:set_icon2("")
         end
     end)
 end
