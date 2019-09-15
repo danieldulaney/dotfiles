@@ -100,6 +100,10 @@ end
 -- }}}
 
 -- {{{ Parsers etc.
+function rtrim(s)
+    return s:gsub("%s+$", "")
+end
+
 function parse_raw_status(raw_status)
     local results = {}
 
@@ -112,7 +116,7 @@ function parse_raw_status(raw_status)
                     results["Interface"] = interface
                 end
             else
-                results[key] = value
+                results[key] = rtrim(value)
             end
         end
     end
