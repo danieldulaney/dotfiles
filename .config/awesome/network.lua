@@ -30,7 +30,7 @@ end
 
 local has_iwctl = nil
 local has_networkctl = nil
-local has_curl = nil
+local has_ping = nil
 -- }}}
 
 -- {{{ Tooltip
@@ -55,8 +55,8 @@ function check_availables()
         update_local()
     end)
 
-    awful.spawn.easy_async("which curl", function(_, _, _, exitcode)
-        has_curl = exitcode == 0
+    awful.spawn.easy_async("which ping", function(_, _, _, exitcode)
+        has_ping = exitcode == 0
         update_remote()
     end)
 end
@@ -74,12 +74,12 @@ function update_local()
 end
 
 function update_remote()
-    if not has_curl then
-        naughty.notify{ text = "No curl" }
+    if not has_ping then
+        naughty.notify{ text = "No ping" }
         return
     end
 
-    awful.spawn.easy_async("curl --head example.com", function(_, _, _, exitcode)
+    awful.spawn.easy_async("ping -c 1 1.1", function(_, _, _, exitcode)
         if exitcode == 0 then
             network_widget:set_icon2("")
         else
