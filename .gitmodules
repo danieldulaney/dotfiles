@@ -19,3 +19,6 @@
 [submodule ".config/awesome/sharedtags"]
 	path = .config/awesome/sharedtags
 	url = https://github.com/Drauthius/awesome-sharedtags.git
+[submodule ".vim/pack/plugins/start/vim-javascript"]
+	path = .vim/pack/plugins/start/vim-javascript
+	url = https://github.com/pangloss/vim-javascript.git

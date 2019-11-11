@@ -20,8 +20,15 @@ inoremap jk <Esc>
 
 nnoremap <Space> @q
 
+" Web stuff tends to get very indented
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+autocmd FileType html       setlocal shiftwidth=2 tabstop=2
+
+" Makefiles are a special snowflake
+autocmd FileType makefile   setlocal noexpandtab nosmarttab
+
 " Set up the color column
-set colorcolumn=80,120
+set colorcolumn=80,100,120
 highlight ColorColumn ctermbg=0
 
 " Set vimdiff colors
