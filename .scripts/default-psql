@@ -1,0 +1,3 @@
+#! /bin/sh
+
+sudo -u postgres PSQLRC="$HOME/.psqlrc" psql
