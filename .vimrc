@@ -25,7 +25,7 @@ autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
 autocmd FileType html       setlocal shiftwidth=2 tabstop=2
 
 " Makefiles are a special snowflake
-autocmd FileType makefile   setlocal noexpandtab nosmarttab
+autocmd FileType make       setlocal noexpandtab nosmarttab shiftwidth=8
 
 " Set up the color column
 set colorcolumn=80,100,120
@@ -39,3 +39,6 @@ highlight DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Re
 
 silent! call pathogen#infect()
 
+" Use flake8 if available
+let g:syntastic_python_python_exec='python3'
+let g:syntastic_python_checkers=['python']
