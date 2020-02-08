@@ -1,0 +1,29 @@
+#! /usr/bin/env python3
+
+"""Monitor the growth of a file over time
+"""
+
+import sys, os, time
+
+filename = sys.argv[1]
+update_interval = 2
+
+alpha = 0.2
+
+last_rate = None
+last_size = os.stat(filename).st_size
+
+while True:
+    time.sleep(update_interval)
+
+    current_size = os.stat(filename).st_size
+    growth = (current_size - last_size) / update_interval
+
+    last_size = current_size
+
+    if last_rate is None:
+        last_rate = growth
+    else:
+        last_rate = growth * alpha + last_rate * (1 - alpha)
+
+    print(last_rate / 1_000_000_000)
