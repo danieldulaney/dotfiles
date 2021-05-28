@@ -67,3 +67,8 @@
 # Other tools
 !.misc/
 !.misc/**
+
+# Htop config
+!.config/htop/
+!.config/htop/**
+
