@@ -1,0 +1,56 @@
+#! /usr/bin/env zsh
+
+function nice_ref() {
+    ref=$1
+
+    short=$(git rev-parse --show $ref)
+    date=$(git show -s --format=%ci $ref)
+
+    echo "$short ($date)"
+}
+
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+
+echo "Resetting staging area"
+git reset
+
+echo "Ensuring we have the latest .dotfiles repo"
+git pull
+
+typeset -A updated
+
+for ref submod branch in $(git submodule); do
+    echo
+
+    name=$(basename ${submod})
+    name=${name#.}
+    echo "Checking ${name}..."
+
+    pushd ${submod}
+        old_ref=$(git rev-parse HEAD)
+
+        echo "Pulling $(git rev-parse --abbrev-ref ${old_ref})"
+        git pull
+
+        new_ref=$(git rev-parse HEAD)
+
+        if [ $old_ref = $new_ref ]; then
+            echo "No update needed"
+        else
+            echo "Updated ${name} from $(nice_ref ${old_ref}) to $(nice_ref ${new_ref})"
+            git add ${submod}
+            updated+=(name)
+        fi
+    popd
+done
+
+echo
+
+if [ ${#updated[@]} -gt 0 ]; then
+    echo ${updated}
+    git commit -m "Updated deps"
+    git push
+else
+    echo "No updates needed!"
+fi
