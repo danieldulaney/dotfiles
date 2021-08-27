@@ -28,8 +28,8 @@ autocmd FileType html       setlocal shiftwidth=2 tabstop=2
 autocmd FileType make       setlocal noexpandtab nosmarttab shiftwidth=8
 
 " Set up the color column
-set colorcolumn=80,100,120
-highlight ColorColumn ctermbg=0
+set colorcolumn=100
+highlight ColorColumn ctermbg=DarkGreen ctermfg=Black
 
 " Set vimdiff colors
 highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
