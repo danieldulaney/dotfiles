@@ -80,7 +80,8 @@ export EDITOR=vim
 export PATH="$HOME/.scripts:$PATH"
 
 # If the SSH_AUTH_SOCK env variable isn't set, set it
-if [ ! -v SSH_AUTH_SOCK ]; then
+# -v isn't in some older zsh's, so use the posix check
+if [ ! -n "${SSH_AUTH_SOCK+1}" ]; then
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
 fi
 
