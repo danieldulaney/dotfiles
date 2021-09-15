@@ -17,7 +17,6 @@ set wildmenu
 set hlsearch
 
 inoremap jk <Esc>
-
 nnoremap <Space> @q
 
 " Web stuff tends to get very indented
@@ -36,6 +35,10 @@ highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Re
 highlight DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
 highlight DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
 highlight DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
+
+" Search for tags files in the current directory or in recursive parents
+" See https://stackoverflow.com/a/5019111/3404377
+set tags=tags;/
 
 silent! call pathogen#infect()
 
