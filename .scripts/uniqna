@@ -1,0 +1,13 @@
+#! /usr/bin/env python3
+
+import sys
+
+seen = set()
+
+for line in sys.stdin:
+    if not line in seen:
+        seen.add(line)
+
+        # We already have the correct terminator on line
+        print(line, end="")
+
