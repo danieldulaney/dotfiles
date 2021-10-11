@@ -1,11 +1,13 @@
 syntax enable
 
-set tabstop=8
+" Default to 4-width space indents
+set tabstop=4
+set shiftwidth=4
 set softtabstop=0
 set expandtab
-set shiftwidth=4
 set smarttab
 
+" Turn on filetype detection and filetype-specific indentation
 filetype indent on
 
 set mouse=a
@@ -14,21 +16,30 @@ set number
 set nowrap
 set wildmenu
 
+" Highlight all search requests
 set hlsearch
 
 inoremap jk <Esc>
 nnoremap <Space> @q
 
+" Set up the color column
+set colorcolumn=100
+highlight ColorColumn ctermbg=DarkGreen ctermfg=Black
+
 " Web stuff tends to get very indented
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
 autocmd FileType html       setlocal shiftwidth=2 tabstop=2
+autocmd FileType xml        setlocal shiftwidth=2 tabstop=2
+
+" C/C++ files have been like this everywhere I've worked
+autocmd FileType c          setlocal shiftwidth=2 tabstop=2
+autocmd FileType cpp        setlocal shiftwidth=2 tabstop=2
 
 " Makefiles are a special snowflake
 autocmd FileType make       setlocal noexpandtab nosmarttab shiftwidth=8
 
-" Set up the color column
-set colorcolumn=100
-highlight ColorColumn ctermbg=DarkGreen ctermfg=Black
+" Change the colorcolumn for git commit files
+autocmd FileType gitcommit  setlocal colorcolumn=50,72
 
 " Set vimdiff colors
 highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
