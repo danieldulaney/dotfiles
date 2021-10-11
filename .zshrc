@@ -93,6 +93,11 @@ fi
 # Add $HOME/.local/bin to the PATH
 export PATH="$HOME/.local/bin:$PATH"
 
+# If I have a scripts folder, add it to the PATH
+if [[ -d $HOME/scripts ]]; then
+    export PATH="$HOME/scripts:$PATH"
+fi
+
 # Docker aliases
 alias dk=docker
 # Docker build and run current or previous dir
