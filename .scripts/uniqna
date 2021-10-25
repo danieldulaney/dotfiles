@@ -1,13 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env sh
 
-import sys
-
-seen = set()
-
-for line in sys.stdin:
-    if not line in seen:
-        seen.add(line)
-
-        # We already have the correct terminator on line
-        print(line, end="")
+stdbuf -oL awk '!seen[$0]++'
 
